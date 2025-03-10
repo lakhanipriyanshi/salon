@@ -1,0 +1,68 @@
+   </main>
+
+   <!-- Delete Record Model -->
+   <div class="modal fade" id="deleteRecordModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteRecordModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content">
+            <div class="modal-body">
+               <input type="hidden" id="delete_id" name="delete_id" />
+               <h4 class="delete_text_css">
+                  Are you sure, you want to delete <span class="text_bold name_show"></span> <span class="tag_name"></span>?
+               </h4>
+               <!-- <p class="text-danger p-0">
+                  Warning: This data will no longer available here.
+               </p> -->
+            </div>
+            <div class="modal-footer p-1">
+               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+               <button type="button" id="delete_record" class="btn btn-danger" data-bs-dismiss="modal">Delete</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+   <!-- Change Password Modal -->
+   <div class="modal fade" id="changepassword" data-bs-keyboard="false" tabindex="-1" aria-labelledby="changepasswordLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+         <div class="modal-content">
+            <div class="modal-body">
+               <h3 class="card-title border-bottom mb-4 pb-2 fs-5">Change Password</h3>
+               <form class="row g-3">
+                  <div class="col-md-12">
+                     <label for="old_pass" class="form-label">Old Password</label>
+                     <input type="password" class="form-control" id="old_pass">
+                  </div>
+                  <div class="col-md-12">
+                     <label for="new_pass" class="form-label">New Password</label>
+                     <input type="password" class="form-control" id="new_pass">
+                  </div>
+                  <div class="col-md-12">
+                     <label for="confirm_pass" class="form-label">Confirm Password</label>
+                     <input type="password" class="form-control" id="confirm_pass">
+                  </div>
+                  <div class="d-flex justify-content-end gap-2">
+                     <button type="button" class="btn btn-dark" data-bs-dismiss="modal">Close</button>
+                     <button type="submit" class="btn btn-danger">Update Password</button>
+                  </div>
+               </form>
+            </div>
+         </div>
+      </div>
+   </div>
+   
+   <!-- Vendor JS Files -->
+   <!-- <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script> -->
+   <script src="/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+
+   <!-- Template Main JS File -->
+   <script src="/js/jquery.min.js"></script>
+   <script src="/js/bootstrap.min.js"></script>   
+   <script src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+   <script src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+   <script src="/js/main.js"></script>
+   <script src="/js/custom.js"></script>
+   <% if (footer.js != "") { %>
+      <script  src="/js/<%- footer.js %>"></script>
+   <% } %>
+</body>
+</html>

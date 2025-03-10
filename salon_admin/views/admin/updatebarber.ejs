@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Add Service</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h2>Update Barber <%= barber.name %></h2>
+
+      <form id="updateform" enctype="multipart/form-data">
+        <label for="image">Upload Images:</label>
+        <input type="file" class="form-control" name="imageArray" multiple />
+        <img src="<%=barber.img%>" alt="Current Image" width="100"/><br />
+        <br />
+        <label for="name">Barber Name:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="name"
+          value="<%= barber.name %>"
+          required
+        /><br />
+        <label for="barbar_type">barbar_type:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="barbar_type"
+          value="<%= barber.barbar_type %>"
+          required
+        /><br />
+        <input type="hidden" name="barberId" value="<%= barber._id %>" />
+        <button type="submit" class="btn btn-primary custom-btn">Update Barber</button>
+      </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+<nav aria-label="Page navigation">
+  <% if(pages > 0 ){ %>
+  <ul class="pagination justify-content-center">
+    <!-- first -->
+    <li class="page-item <%= current === 1 ? 'disabled' : '' %>">
+      <a class="page-link" href="<%= current === 1 ? '#' : '?page=1' %>">First</a>
+    </li>
+
+    <!-- previous -->
+    <li class="page-item <%= current === 1 ? 'disabled' : '' %>">
+      <a class="page-link" href="<%= current === 1 ? '#' :'?page=' + (current - 1 ) %>"
+        >Previous</a
+      >
+    </li>
+
+    <!-- pagenumber -->
+    <% var startpage = Math.max(1, current-4); %>
+    <% var endpage = Math.min(pages, current+4); %> 
+
+    <% if(startpage > 1){ %>
+    <li class="page-item disabled"><a class="page-link">...</a></li>
+    <% } %> 
+    <% for(var i= startpage; i <= endpage; i++) { %>
+
+    <li class="page-item <%= i === current ? 'active' :'' %>">
+      
+    <a class="page-link" href="<%= i === current ? '#' : '?page=' + i %>">
+      <%= i %>
+    </a></li>
+
+    <% } %>
+    <% if(endpage < pages){ %>
+      <li class="page-item disabled"><a class="page-link">...</a></li>
+      <% } %> 
+
+
+    <!-- next -->
+    <li class="page-item <%= current === pages ? 'disabled' : '' %>">
+      <a class="page-link" href="<%= current === pages ? '#' : '?page=' + (current + 1 ) %>"
+        >Next</a
+      >
+    </li>
+    
+    <!-- Last -->
+    <li class="page-item <%= current === pages ? 'disabled' : '' %>">
+      <a class="page-link" href="<%= current === pages ? '#':'?page='+ pages %>">Last</a>
+    </li>
+  </ul>
+<% } %>
+</nav>
+
+
+
+  

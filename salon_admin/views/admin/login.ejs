@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+</head>
+<body>
+   
+<div class="card mb-3">
+   <div class="card-body">
+      <div class="pt-4 pb-2">
+         <h5 class="card-title text-center pb-0 fs-4">Login to Account</h5>
+      </div>
+      <form id="form-login" name="form" method="post" class="row g-3 needs-validation" novalidate>
+         <div class="col-12">
+            <label for="yourEmail" class="form-label">Email</label>
+            <div class="input-group has-validation">
+               <input class="form-control" type="email" name="email" id="email" placeholder="Enter email address" required>
+               <div class="invalid-feedback">Please enter your email!</div>
+            </div>
+         </div>
+         <div class="col-12">
+            <label for="yourPassword" class="form-label">Password</label>
+            <input class="form-control" type="password" name="password" id="password" placeholder="Enter password" required>
+            <div class="invalid-feedback">Please enter your password!</div>
+         </div>
+
+         <!-- <div class="col-12">
+            <div class="form-check">
+               <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
+               <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+         </div> -->
+       
+         <div class="col-12 pt-3">
+            <button md-ink-ripple type="submit" id="btnLogin" class="btn btn-primary w-100">
+               Login
+            </button>
+         </div>
+      </form>
+   </div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+   $(document).ready(function(){
+      $('#form-login').on("submit",function(e){
+         e.preventDefault();
+         let email = $("#email").val();
+         let password = $("#password").val();
+         $.ajax({
+            type:"Post",
+            url:"/admin/login",
+            contentType:"application/json",
+            data:JSON.stringify({email:email,password:password}),
+            success: function(data){
+                  if(data.flag === 0)
+                  {
+                     alert(data.msg);
+                  }
+                  else
+                  {
+                     window.location.replace('/admin/dashboard');
+                  }
+            },
+            error:function(err)
+            {
+               alert("error:----un",err); 
+            }
+         });
+      });
+   });
+</script>
+</html>

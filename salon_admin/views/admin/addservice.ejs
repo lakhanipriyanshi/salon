@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Add Service</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h2>Add Service</h2>
+      <form id="addform" enctype="multipart/form-data" >
+        <label for="image">Upload Images:</label>
+        <input type="file" class="form-control" name="imageArray" id="simg" multiple />
+
+        <label for="servicename">Service Name:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="servicename"
+          id="sname"
+        /><br />
+
+        <label for="description">Description:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="description"
+          id="sdesc"
+        /><br />
+
+        <label for="price">Price:</label>
+        <input type="number" class="form-control" name="price" id="sprice" /><br />
+
+        <button type="submit" class="btn btn-primary custom-btn">Add Service</button>
+      </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+ <script src="/js/service.js"></script>
+  </body>
+</html>

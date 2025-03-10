@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Gallery List</h2>
+        <a href="/admin/addgallery"><button>Add Gallery</button></a>
+      </div>
+     <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead class="thead-dark">
+          <tr>
+            <th class="text-center">Category</th>
+            <th class="text-center">Images</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%if(data.galleries && data.galleries !== undefined && data.galleries.length > 0 ){%>
+          <% data.galleries.forEach(gallery => { %>
+          <tr>
+            <td class="text-center"><%= gallery.gallerydocument.categorytype %></td>
+            <td class="text-center">
+              <% gallery.img.forEach(image => { %>
+              <img src="<%= image %>" alt="" width="80" />
+              <% }) %>
+            </td>
+          </tr>
+          <% }) %>
+          <% }else{ %>
+            <p class="no-notification">  No galllery available </p> 
+            <% } %>
+        </tbody>
+      </table>
+    </div>
+    <%- include('pagination',{current:current,pages:pages}) %>
+  </div>
+  </body>
+</html>

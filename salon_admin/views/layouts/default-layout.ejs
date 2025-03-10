@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title><%- header.title %></title>
+
+      <!-- Favicons -->
+      <link rel="icon" href="<%= process.env.APP_URL %>/images/favicon.png" type="image/svg">
+      <link href="/images/apple-touch-icon.png" rel="apple-touch-icon">
+
+      <!-- Vendor CSS Files -->
+      <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+      <!-- Template Main CSS File -->
+      <link href="/css/style.css" rel="stylesheet">
+   </head>
+   <body>
+      <main class="content-pages">
+         <div class="container">
+            <div class="page-container pt-4">
+               <%- body %>
+            </div>
+
+      <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="/js/jquery.min.js"></script>
+      <script src="/js/bootstrap.min.js"></script>
+      <script src="/js/main.js"></script>
+   </body>
+</html>

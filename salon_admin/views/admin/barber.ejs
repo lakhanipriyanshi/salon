@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Barber List</h2>
+        <a href="/admin/addbarber"><button>Add Barber</button></a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th class="text-center">Image</th>
+              <th class="text-center">Barber Name</th>
+              <th class="text-center">barbar_type</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <%if(barbers && barbers !== undefined && barbers.length > 0){ %>
+            <% barbers.forEach((barber,index) => { %>
+            <tr>
+              <td class="text-center">
+                <% if (barber.img.length > 0) { %>
+                <img
+                  src="<%= barber.img[0] %>"
+                  alt="barber Image"
+                  width="50"
+                />
+                <% } else { %> No Image Available <% } %>
+              </td>
+              <td class="text-center"><%= barber.name %></td>
+              <td class="text-center"><%= barber.barbar_type %></td>
+           
+              <td class="text-center">
+                <button class="btn btn-primary btn-sm" onclick="window.location.href='/admin/updatebarber/<%=barber._id%>';">Edit</button>
+               
+                              
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger btn-sm delete_barber" data-bs-toggle="modal" data-id="<%=barber._id%>" data-bs-target="#exampleModal">
+                  Delete
+                </button>
+                </td>                   
+            </tr>
+            <% }) %>
+            <%}else{%>
+          <p class="no-notification">  No barbers available</p> 
+              <%}%>
+          </tbody>
+        </table>
+         <!-- Modal -->
+         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Barber</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Are you sure you want to delete this barber?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            
+                  <button type="submit" class="btn btn-danger deletebarber" id="delete-barber">Delete</button>
+                 </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <%- include('pagination',{current:current, pages:pages})%>
+    </div>
+  </body>
+</html>

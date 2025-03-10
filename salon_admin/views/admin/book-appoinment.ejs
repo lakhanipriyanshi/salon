@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Booking-Appoinment List</h2>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th class="text-center">Image</th>
+              <th class="text-center">Username</th>
+              <th class="text-center">Mobile No</th>
+              <th class="text-center">Email</th>
+
+              <th class="text-center">Service</th>
+              <th class="text-center">Barber</th>
+              <th class="text-center">Book Date</th>
+
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if(data.book && data.book !== undefined && data.book.length > 0)
+            { %> <% data.book.forEach((book,index)=> { %>
+            <tr>
+              <td class="text-center">
+                <% if (book.img && book.img.length > 0) { %>
+                <img src="<%= book.img %>" alt="User Image" width="80" />
+                <% } else { %>
+                <img
+                  src="http://localhost:3002/img/Profile.png"
+                  alt="Profile"
+                  class="profile-img"
+                  width="80"
+                />
+                <% } %>
+              </td>
+              <td class="text-center"><%= book.username %></td>
+              <td class="text-center"><%= book.mobileno %></td>
+              <td class="text-center"><%= book.email %></td>
+              <td class="text-center"><%= book.servicename %></td>
+              <td class="text-center"><%= book.barbername %></td>
+              <td class="text-center"><%= book.bookdate %></td>
+
+              <td class="text-center">
+                <% if(book.status === 1) { %>
+                <button
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal1"
+                  data-userid="<%=book.userId%>"
+                  data-booksid="<%= book._id%>"
+                  class="btn btn-success btn-sm booking_status_change"
+                >
+                  Accept
+                </button>
+                <!-- Button trigger modal -->
+                <button
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleModal"
+                  data-userid="<%=book.userId%>"
+                  data-booksid="<%= book._id%>"
+                  class="btn btn-danger btn-sm booking_status_change"
+                >
+                  Reject
+                </button>
+                <% } else if(book.status === 2){ %>
+                <h2 class="accept">Accept</h2>
+                <% } else { %>
+                <h2 class="reject">Reject</h2>
+                <% } %>
+              </td>
+            </tr>
+
+            <% }); %> <% }else{ %>
+
+            <p class="no-notification">No Appoinment available</p>
+            <% } %>
+          </tbody>
+        </table>
+
+        <!-- Accept model -->
+        <div
+          class="modal fade"
+          id="exampleModal1"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Accept Booking-Appoinment
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                Are you Sure you want to Accept this User Appoinment
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-success booking"
+                  id="booking_accept_btn"
+                  data-status="2"
+                >
+                  Accept
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- reject Modal -->
+        <div
+          class="modal fade"
+          id="exampleModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">
+                  Reject Booking-Appoinment
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                Are you Sure you want to Reject this User Appoinment
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-danger booking"
+                  id="booking_reject_btn"
+                  data-status="3"
+                >
+                  Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%- include('pagination',{current:current,pages:pages}) %>
+      </div>
+    </div>
+  </body>
+</html>

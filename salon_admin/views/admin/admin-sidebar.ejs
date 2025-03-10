@@ -1,0 +1,79 @@
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li class="nav-item">
+        <a class="nav-link <%- data.id == 'dashboard' ? '' : 'collapsed' %>" href="/admin/dashboard">
+          <i class="bi bi-grid"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link <%- data.id == 'user' ? '' : 'collapsed' %>" href="/admin/user">
+          <i class="bi bi-person"></i>
+          <span>Users</span>
+        </a>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link <%- data.id == 'service' ? '' : 'collapsed' %>" href="/admin/service">
+          <i class="bi bi-file-earmark-text"></i>
+          <span>Service</span>
+        </a>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link <%- data.id == 'barber' ? '' : 'collapsed' %>" href="/admin/barber">
+          <i class="bi bi-people"></i>
+          <span>Barber</span>
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link <%- data.id == 'category' ? '' : 'collapsed' %>" href="/admin/category">
+          <i class="bi bi-grid"></i>
+          <span>Category</span>
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link <%- data.id == 'gallery' ? '' : 'collapsed' %>" href="/admin/gallery">
+          <i class="bi bi-images"></i>
+          <span>Gallery</span>
+        </a>
+      </li>
+
+            
+      <li class="nav-item">
+        <a class="nav-link <%- data.id == 'book-appoinment' ? '' : 'collapsed' %>" href="/admin/book-appoinment">
+          <i class="bi bi-calendar3"></i>
+          <span>Booking Appoinment</span>
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link <%- data.id == 'about' ? '' : 'collapsed' %>" href="/admin/about">
+          <i class="bi bi-file-person"></i>
+          <span>About US</span>
+        </a>
+      </li>
+      
+      <li class="nav-item">
+        <a class="nav-link <%- data.id == 'settings' ? '' : 'collapsed' %>" href="/admin/setting">
+          <i class="bi bi-gear"></i>  
+          <span>Settings</span>
+        </a>
+      </li>
+        
+      <!-- Stripe Charge Tab -->
+      <% if(process.env.APP_STRIPE_ENV !== undefined && process.env.APP_STRIPE_ENV === "local") { %>
+        <li class="nav-item">
+          <a class="nav-link <%- data.id == 'stripe-charge' ? '' : 'collapsed' %>" href="/admin/stripe-charge">
+            <i class="bi bi-gear"></i>
+            <span>Stripe Charge</span>
+          </a>
+        </li>
+      <% } %>
+    </ul>
+</aside>

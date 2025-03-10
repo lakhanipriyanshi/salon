@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />    
+  </head>
+  
+
+  <body>
+    <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Users List</h2>
+        <a href="/admin/adduser"><button>Add User</button></a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th class="text-center">Image</th>
+              <th class="text-center">Username</th>
+              <th class="text-center">Mobile No</th>
+              <th class="text-center">Email</th>
+              <th class="text-center">Gender</th>
+              <th class="text-center">Status</th>
+            
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+        <tbody>  
+          <% if(users && users !== undefined && users.length > 0){ %>
+          <% users.forEach((user,index)=> { %>
+
+          <tr>  
+            <td class="text-center">
+              <% if (user.img !== undefined && user.img !== null && user.img.length > 0) { %>
+              <img
+                src="<%= user.img[0] %>"
+                alt="User Image"
+                width="80"
+              />
+              <% } else { %>
+                <img
+                  src="http://localhost:3002/img/Profile.png"
+                  alt="Profile"
+                  class="profile-img" 
+                  width="80"
+                />
+              <% } %>
+              </td>            
+              <td class="text-center"><%= user.username %></td>
+              <td class="text-center"><%= user.mobileno %></td>
+              <td class="text-center"><%= user.email %></td>
+              <td class="text-center"><%= user.gender %></td>
+              <td class="text-center">
+                <% if(user.isVery === 1){ %>
+                    <button class="btn btn-warning btn-sm">Pending</button>
+               <% }else if(user.isVery === 2){ %>
+                <button class="btn btn-success btn-sm">Sucess</button>
+                <% }else if(user.isVery === 3){ %>
+                  <button class="btn btn-danger btn-sm">suspend</button>
+                  <% } %>
+
+              </td>
+              <td class="text-center"><button class="btn btn-primary btn-sm" onclick="window.location.href = '/admin/updateuser/<%= user._id %>';">Edit</button>
+
+              <!-- Button trigger modal -->
+             
+                  <button  data-bs-toggle="modal" data-bs-target="#exampleModal"   data-id="<%= user._id %>"  class="btn btn-danger btn-sm delete_user">Delete</button>
+              
+              </td>
+            </td>
+            </tr>
+          <% }); %>
+          <%}else{%>           
+          <p class="no-notification">  No Users available </p> 
+            <%}%>
+        </tbody>
+      </table>
+
+
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Delete User</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+              Are you Sure you want to delete
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                     <button type="button" class="btn btn-danger deleteuser" id="delete-user">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+      </div>
+      <%- include('pagination',{current:current, pages:pages})%>
+    </div>
+    
+  </body>
+</html>

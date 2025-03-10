@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+<!--    <div class="container mt-4">
+        <h2>Add about</h2>
+        <form id="addform" enctype="multipart/form-data" >
+          <label for="image">Upload Images:</label>
+          <input type="file" class="form-control" name="imageArray" multiple />
+  
+          <label for="experince">experince:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="experince"
+            required
+          /><br />
+  
+          <label for="description">description:</label>
+          <input
+            type="text"
+            class="form-control"
+            name="description"
+            required
+          /><br />
+          <button type="submit" class="btn btn-primary">Add Barber</button>
+        </form>
+      </div>
+
+-->
+      
+   <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>About Us</h2>
+        <% abouts.forEach(about =>{ %>
+          <a href="/admin/updateabout/<%= about._id%>"><button>update About</button></a>
+          <% }) %>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th class="text-center">Image</th>
+              <th class="text-center">experince</th>
+              <th class="text-center">description</th>
+            
+            </tr>
+          </thead>
+          <tbody>
+            <%if(abouts && abouts !== undefined && abouts.length > 0){ %>
+            <% abouts.forEach((about,index) => { %>
+            <tr>
+              <td class="text-center">
+                <% if (about.img.length > 0) { %>
+                <img
+                  src="<%= about.img[0] %>"
+                  alt="about Image"
+                  width="50"
+                />
+                <% } else { %> No Image Available <% } %>
+              </td>
+              <td class="text-center"><%= about.experince %></td>
+           
+             <td class="text-center"><%= about.description %></td>
+            </tr>
+            <% }) %>
+            <%} else{%>
+              
+          <p class="no-notification">  No aboutus available</p>  
+              <%}%>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </body>
+</html>

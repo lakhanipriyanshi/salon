@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%- header.title %></title>
+
+    <!-- Favicons -->
+    <link
+      rel="icon"
+      href="<%= process.env.APP_URL %>/images/favicon.png"
+      type="image/svg"
+    />
+    <link href="/images/apple-touch-icon.png" rel="apple-touch-icon" />
+
+    <!-- Vendor CSS Files -->
+    <link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css"
+    />  
+     <link
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    rel="stylesheet"
+  />    
+
+    <!-- Template Main CSS File -->
+     
+    <link href="/css/style.css" rel="stylesheet" />
+    <link href="/css/main.css" rel="stylesheet" />
+    
+    <script>
+      //show notification dropdown
+      function myFunction() {
+        document.getElementById("myDropdown").classList.toggle("show");
+      }
+      // Close the dropdown if the user clicks outside of it
+      window.onclick = function (event) {
+        if (!event.target.matches(".dropbtn")) {
+          var dropdowns = document.getElementsByClassName("dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains("show")) {
+              openDropdown.classList.remove("show");
+            }
+          }
+        }
+      };
+    </script>
+  </head>
+  <body>
+    <main id="main" class="main">
+      <%- include('../admin/admin-sidebar.ejs') %>
+      <!-- ======= Header ======= -->
+      <header id="header" class="header fixed-top d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-between">
+          <a href="/admin/dashboard" class="logo d-flex align-items-center">
+            <img src="/images/logo.png" alt="" />
+            <span class="d-none d-lg-block">SalonSync</span>
+          </a>
+          <i class="bi bi-list toggle-sidebar-btn"></i>
+        </div>
+
+        <nav class="header-nav ms-auto">
+          <ul class="d-flex align-items-center">
+            <li class="nav-item dropdown pe-4">
+              <div class="time-container">
+                <span id="currentTime"></span>
+              </div>
+            </li>
+
+            <!-- notification -->
+            <li class="nav-item dropdown pe-4">
+            <div class="dropdown">
+              <i class="bi bi-bell-fill dropbtn" onclick="myFunction()"></i>
+                <div id="myDropdown" class="dropdown-content">
+                  <% if(header.notification && header.notification !== undefined && header.notification.length > 0) { %>
+                      <% header.notification.forEach(notification => { %>
+                      <div class="notification-item">
+                        
+                      <div class="notification-header">
+                        <strong class="notification-title"><%= notification.title %></strong>
+                        <p class="notification-date"><%= notification.createdAt %></p>
+                      </div>
+                        <div class="notification-content">
+                        <% if ( notification.img !== undefined && notification.img.length > 0) { %>
+                          <img
+                            src="<%= notification.img %>"
+                            alt="current profile"
+                            class="profile-notification-img"
+                            width="80"
+                          />
+                          <% } else { %>
+                            <img
+                              src="http://localhost:3002/img/Profile.png" 
+                              alt="Profile"
+                              class="profile-notification-img"
+                              width="80"
+                            />
+                          <% } %>                    
+                          <p class="notification-text"><%= notification.description %></p>
+                        </div>
+                      <% }) %> 
+                  <% }else{ %> 
+                
+          <p class="no-notification">  No notification available</p>  
+                  <% } %>
+                </div> 
+              </div>            
+            </li>
+          <!-- notification -->
+
+            <li class="nav-item dropdown pe-3">
+              <a
+                class="nav-link nav-profile d-flex align-items-center pe-0"
+                href="javascript:;"
+                data-bs-toggle="dropdown">
+                <img
+                  src="/images/profile-img.png"
+                  alt="Profile"
+                  class="rounded-circle"/>
+                <span class="d-none d-md-block dropdown-toggle ps-2"><%= header.name %></span>
+              </a>
+
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile p-0">
+                <li>
+                  <a class="dropdown-item d-flex align-items-center" href="/admin/logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Log Out</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <!-- End Header -->
+
+      <div class="pagetitle d-flex align-items-center justify-content-between">
+        <div>
+          <h1><%- header.title %></h1>
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a href="/admin/dashboard">Home</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <%- data?.label ? data?.label : "" %>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>

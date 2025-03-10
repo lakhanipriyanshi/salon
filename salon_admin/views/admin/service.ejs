@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Service List</h2>
+        <a href="/admin/addservice"><button>Add Service</button></a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>  
+              <th class="text-center">Image</th>
+              <th class="text-center">Service Name</th>
+              <th class="text-center">Description</th>
+              <th class="text-center">Price</th>
+              <th class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if(services && services !== undefined && services.length > 0){ %>
+            <% services.forEach(service => { %>
+            <tr>
+              <td class="text-center">
+                <% if (service.img.length > 0) { %>
+                <img
+                  src="<%= service.img[0] %>"
+                  alt="Service Image"
+                  width="50"
+                />
+                <% } else { %> No Image Available <% } %>
+              </td>
+
+              <!-- <td><img src="<%= service.img %>" alt="Service Image"></td>-->
+              <td class="text-center"><%= service.servicename %></td>
+              <td class="text-center"><%= service.description %></td>
+              <td class="text-center"><%= service.price %></td>
+              <td class="text-center"><button class="btn btn-primary btn-sm" onclick="window.location.href = '/admin/updateservice/<%= service._id %>';">Edit</button>
+ 
+                <button  data-bs-toggle="modal" data-bs-target="#exampleModal"  class="btn btn-danger btn-sm delete_service" data-id="<%=service._id%>">Delete</button>
+              </td>
+             
+             
+            </tr>
+            <% }) %>
+            <%} else{ %>
+                          
+          <p class="no-notification">  No service available </p> 
+            <% } %>
+          </tbody>
+        </table>
+        
+              <!-- Modal -->
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Delete Service</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+              Are you Sure you want to delete this service
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    
+                     <button type="button" class="btn btn-danger delete-service" id="deleteservice">Delete</button>
+                     
+                    </div>
+                  </div>
+                </div>
+              </div>
+          
+      </div>
+       
+      <%- include('pagination',{current:current, pages:pages})%>
+    </div>
+    
+  </body>
+</html>

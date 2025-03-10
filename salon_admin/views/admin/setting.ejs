@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link
+  href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+  rel="stylesheet"
+/>    
+</head>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<body>
+  <section class="section">
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-body pt-3 client-details">
+            <!-- Directly display the form without tabs or button -->
+            <form class="row g-3" id="updatepass">
+              <div class="form-group col-md-6">
+                <h2 style=" font-weight: bold;margin-bottom: 20px;">Change Password</h2>
+                <div class="col-md-12 position-relative">
+                  <label class="form-label">Old Password</label>
+                  <input class="form-control" type="password" name="old_password" placeholder="Current Password" id="old_password" data-auto-focus>
+                  <i class="bi bi-eye-slash ico-right cursor-pointer" id="ey1"></i>
+                </div>
+                <div class="col-md-12 mt-3 position-relative">
+                  <label class="form-label">New Password</label>
+                  <input class="form-control" type="password" id="new_password" name="new_password" placeholder="New Password">
+                  <i class="bi bi-eye-slash ico-right cursor-pointer" id="ey2"></i>
+                </div>
+                <div class="col-md-12 mt-3 position-relative">
+                  <label class="form-label">Confirm Password</label>
+                  <input class="form-control" type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password">
+                  <i class="bi bi-eye-slash ico-right cursor-pointer" id="ey3"></i>
+                </div>
+                <input type="hidden" id="adminId" value="<%= data.adminId %>">
+                
+              <div class="col-md-12 mt-3 position-relative">
+                <button type="submit" class="btn btn-primary custom-btn">Update password</button>
+              </div>
+              </div>
+
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Category List</h2>
+        <a href="/admin/addcategory">
+          <button>Add Category</button>
+        </a>
+      </div>
+      
+      <div class="table-responsive">
+      <table class="table table-bordered text-center">
+        <thead class="thead-dark">
+          <tr>
+            <th class="text-center">Category</th>
+            <th class="text-center">Status</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <%if(categories && categories !== undefined && categories.length > 0){ %>
+          <% categories.forEach(function(category){ %>
+          <tr>
+            <td ><%= category.categorytype %></td>
+            <td class="text-center">
+              <!--class="category_status" for the ajax Call on Change Click Status Update-->
+              <select name="status" class="category_status" data-category-id="<%= category._id %>">
+                <option value="2" <%= category.status == 2 ? 'selected' : '' %>>Active</option>
+                <option value="1" <%= category.status == 1 ? 'selected' : '' %>>Inactive</option>
+              </select>
+            </td>
+            <td class="text-center">
+                      
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-danger btn-sm deletecategory" data-bs-toggle="modal" data-id="<%=category._id%>" data-bs-target="#exampleModal">
+            Delete
+            </button>
+            </td>   
+          </div>
+          </tr>
+          <% }); %>
+          <%}else{%>            
+          <p class="no-notification">  No Category available </p> 
+            <%}%>
+        </tbody>
+      </table>
+       <!-- Modal -->
+       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Delete Category</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this Category?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-danger delete-category" id="delete_category">Delete</button>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <%- include('pagination',{current:current,pages:pages}) %>
+    <div></div>
+  </body>
+</html>
