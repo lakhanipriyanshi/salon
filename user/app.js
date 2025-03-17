@@ -42,6 +42,8 @@ app.use(express.static(path.join(__dirname, "public")));
  app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
+ app.use("/service_images", express.static("uploads/service_images"));
+ app.use("/user_images", express.static("uploads/user_images"));
 //use Session
 app.use(
   session({

@@ -35,6 +35,7 @@ app.use("/images", express.static("assets/images"));
 app.use("/vendor", express.static("assets/vendor"));
 app.use("/banner_images", express.static("uploads/banner_images"));
 app.use("/service_images", express.static("uploads/service_images"));
+app.use("/user_images", express.static("uploads/user_images"));
 app.use(expressLayouts);
 
 // Set up the view engine (EJS)

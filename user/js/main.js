@@ -152,40 +152,6 @@ $(document).ready(function () {
 });
 
 
-// $(document).ready(function () {
-//   $(".filter-category").on("click", function (e) {
-//     e.preventDefault();
-    
-//     console.log("Category clicked:", $(this).data("filter"));
-//     $(".filter-category").removeClass("filter-active");
-//     $(this).addClass("filter-active");
-
-//     const categoryId = $(this).data("filter");
-    
-//     console.log("categoryId---------------------", categoryId);
-//     let object = {
-//       categoryId: categoryId
-//     }
-
-//     $.ajax({
-//       url: "/client/gallery/"+ categoryId,
-//       type: "POST",
-//       data: object,
-//       success: function (data) {
-//         console.log("Received images:", data);
-//         // $(".portfolio-container").html(data.html || "");
-
-//         userToast(1, data.message || "Image Load Success", 2000);
-
-//        },
-      
-//       error: function (error) {
-//         userToast(0, "error get image ", 2000);
-//       },
-//     });
-//   });
-// });
-
 $(document).ready(function () {
   $("#contactForm").on("submit", function (e) {
     e.preventDefault();

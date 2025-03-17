@@ -28,16 +28,23 @@ const { verifyToken,generateOtp,shownotifications } = require("../lib/general.li
 require("dotenv").config();
 let jwtSecretKey = process.env.JWT_SECRET_KEY;
 //image upload
+
 let index = 1;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploads"); // Defines where the files are saved
+    if (file.fieldname === 'user_images') {
+      cb(null, 'public/uploads/user_images');
+    } else {
+      cb(new Error('Invalid field name'), null);
+    }
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now() + "-" + index + "-test.jpg");
     index++;
   },
 });
+
+
 
 //Define maximum fileupload size(1 mb)
 const maxSize = 1 * 1000 * 1000;
@@ -58,7 +65,7 @@ const upload = multer({
       return cb(err);
     }
   },
-}).array("imageArray");
+}).fields([{ name: 'user_images'}]); // Adjust maxCount as necessary
 
 // GET
 // Register Page
@@ -1029,12 +1036,13 @@ router.post("/profile", async (req, res) => {
       if (req.body.gender) {
         update_object["gender"] = req.body.gender;
       }
-
-      let imageArray = [];
-      req.files.forEach((file) => {
-        imageArray.push(`http://localhost:3002/uploads/${file.filename}`);
-      });
-
+      
+      let imageArray = [];      
+      if(req.files.user_images){
+        req.files.user_images.forEach((file) => {
+          imageArray.push(`http://localhost:3002/uploads/user_images/${file.filename}`);
+        });
+      }
       if (imageArray.length > 0) {
         update_object["img"] = imageArray;
       }

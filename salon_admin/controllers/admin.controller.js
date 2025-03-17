@@ -26,6 +26,7 @@ const { appoinmentbook } = require("../models/appoinmentbook.model");
 const { notification } = require("../models/notification.model");
 const { log } = require("console");
 const bcrypt = require("bcrypt");
+
 // const { title } = require("process");
 
 //multer disk storage setup
@@ -33,14 +34,23 @@ const bcrypt = require("bcrypt");
 let index = 1;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "public/uploads"); // Defines where the files are saved
+    if (file.fieldname === 'user_images') {
+      cb(null, 'public/uploads/user_images');
+    } else if (file.fieldname === 'service_images') {
+      cb(null, 'public/uploads/service_images');
+    } else if (file.fieldname === 'barber_images') {
+      cb(null, 'public/uploads/barber_images');
+    } else if (file.fieldname === 'category_images') {
+      cb(null, 'public/uploads/category_images');
+    }else {
+      cb(new Error('Invalid field name'), null);
+    }
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + "-" + Date.now() + "-" + index + "-test.jpg");
     index++;
   },
 });
-
 //Define maximum fileupload size(1 mb)
 const maxSize = 1 * 1000 * 1000;
 const upload = multer({
@@ -60,7 +70,8 @@ const upload = multer({
       return cb(err);
     }
   },
-}).array("imageArray");
+}).fields([{ name: 'user_images'}, { name: 'service_images'},{name:'barber_images'},{name:'category_images'}]); 
+
 
 const getLogin = async (req, res) => {
   log1("getLogin");
@@ -856,8 +867,12 @@ const postaddservice = (req, res) => {
       return res.status(400).json({ success: false, message: err.message });
     }
 
-    const imageArray = req.files.map((file) => `/uploads/${file.filename}`);
-
+    let imageArray =[];
+    if(req.files.service_images){
+      req.files.service_images.map((file) => {
+        imageArray.push(`http://localhost:3000/uploads/service_images/${file.filename}`);
+      });
+    }
     try {
       const newService = new service({
         servicename: req.body.servicename,
@@ -888,9 +903,12 @@ const postaddbarber = (req, res) => {
       console.error("Error during file upload:", err);
       return res.status(400).json({ success: false, message: err.message });
     }
-
-    const imageArray = req.files.map((file) => `/uploads/${file.filename}`);
-
+    let imageArray = [];
+    if(req.files.barber_images){
+      req.files.barber_images.map((file) => {
+        imageArray.push(`/uploads/barber_images/${file.filename}`);
+      });
+    }
     try {
       const newbarber = new barber({
         name: req.body.name,
@@ -922,10 +940,12 @@ const postadduser = async (req, res) => {
       return res.status(400).json({ success: false, message: err.message });
     }
 
-    const imageArray = req.files.map(
-      (file) => `http://localhost:3000/uploads/${file.filename}`
-    );
-
+    let imageArray =[];
+    if(req.files.user_images){
+      req.files.user_images.map((file) => {
+        imageArray.push(`http://localhost:3000/uploads/user_images/${file.filename}`);
+      });
+    }
     const username = req.body.username;
     const password = req.body.password;
     const email = req.body.email;
@@ -969,8 +989,12 @@ const postaddgallery = async (req, res) => {
       console.error("Error during file upload:", err);
       return res.status(400).json({ success: false, message: err.message });
     }
-
-    const imageArray = req.files.map((file) => `/uploads/${file.filename}`);
+    let imageArray =[];
+    if(req.files.category_images){
+      req.files.category_images.map((file) => {
+        imageArray.push(`/uploads/category_images/${file.filename}`);
+      });
+    }
     const { category: categoryId } = req.body;
 
     if (!categoryId) {
@@ -1055,7 +1079,6 @@ const postupdatestatus = async (req, res) => {
       Category.status === Constants?.CATEGORY_STATUS?.INACTIVE
         ? Constants?.CATEGORY_STATUS?.ACTIVE
         : Constants?.CATEGORY_STATUS?.INACTIVE;
-
     const updatecategory = await category.findByIdAndUpdate(
       categoryId,
       { status: updateStatus },
@@ -1077,9 +1100,12 @@ const postaddabout = (req, res) => {
       console.error("Error during file upload:", err);
       return res.status(400).json({ success: false, message: err.message });
     }
-
-    const imageArray = req.files.map((file) => `/uploads/${file.filename}`);
-
+let imageArray = [];
+    if(req.files.service_images){
+      req.files.service_images.map((file) => {
+        imageArray.push(`/uploads/service_images/${file.filename}`);
+      });
+    }
     try {
       const newabout = await about.create({
         experince: req.body.experince,
@@ -1188,10 +1214,14 @@ const postupdatebarber = async (req, res) => {
       if (req.body.barbar_type) {
         updateObj["barbar_type"] = req.body.barbar_type;
       }
+  
       let imageArray = [];
-      req.files.forEach((file) => {
-        imageArray.push(`/uploads/${file.filename}`);
-      });
+      if(req.files.barber_images){
+        req.files.barber_images.forEach((file) => {
+          imageArray.push(`/uploads/barber_images/${file.filename}`);
+        });
+      }
+
       if (imageArray.length > 0) {
         updateObj["img"] = imageArray;
       }
@@ -1232,9 +1262,13 @@ const postupdateabout = (req, res) => {
       }
 
       let imageArray = [];
-      req.files.forEach((file) => {
-        imageArray.push(`/uploads/${file.filename}`);
-      });
+        if(req.files.service_images){
+        req.files.service_images.forEach((file) => {
+          imageArray.push(`/uploads/service_images/${file.filename}`);
+        });
+      }
+      
+
       if (imageArray.length > 0) {
         updateObj["img"] = imageArray;
       }
@@ -1278,9 +1312,11 @@ const postupdateuser = async (req, res) => {
         update_object["gender"] = req.body.gender;
       }
       let imageArray = [];
-      req.files.forEach((file) => {
-        imageArray.push(`http://localhost:3000/uploads/${file.filename}`);
-      });
+      if(req.files.user_images){
+        req.files.user_images.forEach((file) => {
+          imageArray.push(`http://localhost:3000/uploads/user_images/${file.filename}`);
+        });
+      }
       if (imageArray.length > 0) {
         update_object["img"] = imageArray;
       }
@@ -1422,9 +1458,12 @@ const postupdateservice = async (req, res) => {
         update_obj["price"] = req.body.price;
       }
       let imageArray = [];
-      req.files.forEach((file) => {
-        imageArray.push(`/uploads/${file.filename}`);
+       
+    if(req.files.service_images){
+      req.files.service_images.forEach((file) => {
+        imageArray.push(`/uploads/service_images/${file.filename}`);
       });
+    }
       if (imageArray.length > 0) {
         update_obj["img"] = imageArray;
       }

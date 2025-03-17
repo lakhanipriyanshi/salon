@@ -14,7 +14,7 @@ const { adminToken } = require("../models/adminToken.model");
 const generateAuthToken = async (admin_id) => {
   try {
     if (!admin_id) {
-      return error_res("Invalid Admin Id");v
+      return error_res("Invalid Admin Id");
     }
 
     const adminAlb = await adminToken.findOne(
