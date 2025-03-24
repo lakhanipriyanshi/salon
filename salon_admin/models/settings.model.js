@@ -1,4 +1,4 @@
-const { log1, error_res, success_res } = require("../lib/general.lib");
+const { log1, error_res, success_res } = require("../utils/general.lib");
 const { db } = require("../utils/db.helper");
 const { admin } = require("./admin.model");
 const table = "tbl_settings";

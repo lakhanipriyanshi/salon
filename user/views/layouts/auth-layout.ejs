@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%- header.title %></title>
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <main>
+      <center><h2>Welcome To <%= header.title %></h2></center>
+      <%- body %>
+    </main>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="/js/custom.js"></script>
+    <script src="/js/main.js"></script>
+    <% if (footer.js != "") { %>
+      <script  src="/js/<%- footer.js %>"></script>
+   <% } %>
+  </body>
+</html>

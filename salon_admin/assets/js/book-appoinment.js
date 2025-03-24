@@ -11,29 +11,23 @@ $(document).ready(function(){
         e.preventDefault();
         
         const status = $(this).data('status');
-        console.log("status", status);
         let booksid = $(this).data('book-id');
         const userId = $(this).data('userid'); 
-        console.log("userId-----------------------------------", userId);
         if(!booksid){
           adminToast(2, "No book id provided", 2000);
           return;
         }
-        $.ajax({
-            url:"/admin/updatebookstatus/" + booksid,
-            type:'POST',
-            contentType:'application/json',
-            data:JSON.stringify({status,userId}),
-            success:function(response){
-                adminToast(1,response.message||'Successfully updated',2000);
-                setTimeout(() => {
-                  window.location.replace("/admin/book-appoinment");
-             
-                }, 2000);
-            },
-            error:function(){
-              adminToast(2,"Error updating status",2000);
-            }
-        });
-    });
+
+        postCall(`/admin/updatebookstatus/${booksid}` , {status,userId}, function(res) {
+          if (res.flag === 1) {
+            adminToast(1, res.msg,2000);
+            setTimeout(() => {
+            window.location.replace("/admin/book-appoinment");
+            }, 2000);
+          } else {
+            adminToast(0, res.msg,2000);
+          }
+           
+          });
+          });
 });

@@ -5,7 +5,7 @@ const {
   success_res,
   error_res,
   auth_error,   
-} = require("../lib/general.lib");
+} = require("../utils/general.lib");
 const { admin } = require("../models/admin.model");
 const { adminToken } = require("../models/adminToken.model");
 

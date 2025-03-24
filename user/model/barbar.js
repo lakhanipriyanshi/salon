@@ -15,4 +15,4 @@ const barbar = new Schema(
         }
     },{ timestamps: true });
 
-    module.exports = mongoose.model('barbar',barbar);
+module.exports = mongoose.model('barbar',barbar);

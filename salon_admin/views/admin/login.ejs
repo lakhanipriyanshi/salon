@@ -26,13 +26,6 @@
             <input class="form-control" type="password" name="password" id="password" placeholder="Enter password" required>
             <div class="invalid-feedback">Please enter your password!</div>
          </div>
-
-         <!-- <div class="col-12">
-            <div class="form-check">
-               <input class="form-check-input" type="checkbox" name="remember" value="true" id="rememberMe">
-               <label class="form-check-label" for="rememberMe">Remember me</label>
-            </div>
-         </div> -->
        
          <div class="col-12 pt-3">
             <button md-ink-ripple type="submit" id="btnLogin" class="btn btn-primary w-100">
@@ -50,33 +43,4 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-   $(document).ready(function(){
-      $('#form-login').on("submit",function(e){
-         e.preventDefault();
-         let email = $("#email").val();
-         let password = $("#password").val();
-         $.ajax({
-            type:"Post",
-            url:"/admin/login",
-            contentType:"application/json",
-            data:JSON.stringify({email:email,password:password}),
-            success: function(data){
-                  if(data.flag === 0)
-                  {
-                     alert(data.msg);
-                  }
-                  else
-                  {
-                     window.location.replace('/admin/dashboard');
-                  }
-            },
-            error:function(err)
-            {
-               alert("error:----un",err); 
-            }
-         });
-      });
-   });
-</script>
 </html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SalonSync</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta content="Free Website Template" name="keywords" />
+    <meta content="Free Website Template" name="description" />
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon" />
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS Libraries -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="/lib/animate/animate.min.css" rel="stylesheet" />
+    <link
+      href="/lib/owlcarousel/assets/owl.carousel.min.css"
+      rel="stylesheet"
+    />
+    <link href="/lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
+
+    <!-- bootstrap icon css -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+
+    <!-- Template Stylesheet -->
+    <link href="/css/style.css" rel="stylesheet" />
+    
+  </head>
+
+  <body>
+    
+    <!-- Top Bar Start -->
+    <div class="top-bar d-none d-md-block">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="top-bar-left">
+              <div class="text">
+                <h2>8:00 - 9:00</h2>
+                <p>Opening Hour Mon - Fri</p>
+              </div>
+              <div class="text">
+                <h2>+123 456 7890</h2>
+                <p>Call Us For Appointment</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="top-bar-right">
+              <div class="social">
+                <a href=""><i class="fab fa-twitter"></i></a>
+                <a href=""><i class="fab fa-facebook-f"></i></a>
+                <a href=""><i class="fab fa-linkedin-in"></i></a>
+                <a href=""><i class="fab fa-instagram"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Top Bar End -->
+    <!-- Nav Bar Start -->
+    <div class="navbar navbar-expand-lg bg-dark navbar-dark">
+      <div class="container-fluid">
+        <a href="index.html" class="navbar-brand"
+          ><span>S</span>alon <span>S</span>ync</a
+        >
+        <button
+          type="button"
+          class="navbar-toggler"
+          data-toggle="collapse"
+          data-target="#navbarCollapse"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-center"
+          id="navbarCollapse"
+        >
+          <div class="navbar-nav">
+            <a href="/client/home" class="nav-item nav-link <%= header.pagename == 'home' ? 'active' : '' %>">Home</a>
+            <a href="/client/about" class="nav-item nav-link <%= header.pagename == 'about' ? 'active' : '' %>">About</a>
+            <a href="/client/service" class="nav-item nav-link <%= header.pagename == 'service' ? 'active' : '' %>">Service</a>
+            <a href="/client/price" class="nav-item nav-link <%= header.pagename == 'price' ? 'active' : '' %>">Price</a>
+            <a href="/client/barber" class="nav-item nav-link <%= header.pagename == 'barber' ? 'active' : '' %>">Barber</a>
+            <a href="/client/gallery" class="nav-item nav-link <%= header.pagename == 'gallery' ? 'active' : '' %>">Gallery</a>
+            <div class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle <%= (header.pagename == 'blog' || header.pagename == 'single') ? 'active' : '' %>" data-toggle="dropdown">Pages</a>
+              <div class="dropdown-menu">
+                <a href="/client/blog" class="dropdown-item <%= header.pagename == 'blog' ? 'active' : '' %>">Blog Page</a>
+                <a href="/client/single" class="dropdown-item <%= header.pagename == 'single' ? 'active' : '' %>">Single Page</a>
+              </div>
+            </div>
+            <a href="/client/contact" class="nav-item nav-link <%= header.pagename == 'contact' ? 'active' : '' %>">Contact</a>
+          </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="d-flex align-items-center">
+          <div class="nav-item profile">
+            <a href="/client/profile" id="openProfile">
+              <% if(header.userImage && header.userImage !== undefined){ %>
+              <img
+                src="<%= header.userImage%>"
+                alt="current profile"
+                class="profile-img"
+                width="80"
+              />
+              <% } else { %>
+              <img
+                src="/img/Profile.png"
+                alt="Profile"
+                class="profile-img"
+                width="80"
+              />
+              <% } %>
+            </a>
+          </div>
+        </div>
+
+        <!-- Profile Section end -->
+
+        <!-- notification icon start -->
+        <li class="nav-item dropdown pe-4">
+          <div class="dropdown">
+            <i class="bi bi-bell-fill dropbtn" onclick="myFunction()"></i>
+            <div id="myDropdown" class="dropdown-content">
+              <% if(header.notification && header.notification !== undefined && header.notification.length > 0) { %>
+                <% header.notification.forEach(notification => { %>
+         
+              <div class="notification-item">
+                <div class="notification-header">
+                <strong class="notification-title"
+                  ><%= notification.title %></strong
+                >
+
+                <p class="notification-date">
+                  <%= notification.createdAt %>
+                </p>
+              </div>
+                <div class="notification-content">
+                  <% if ( notification.img !== undefined &&
+                  notification.img.length > 0) { %>
+                  <img
+                    src="<%= notification.img %>"
+                    alt="current profile"
+                    class="profile-notification-img"
+                    width="80"
+                  />
+                  <% } else { %>
+                  <img
+                    src="http://localhost:3002/img/Profile.png"
+                    alt="Profile"
+                    class="profile-notification-img"
+                    width="80"
+                  />
+                  <% } %>
+
+                  <p class="notification-text">
+                    <%= notification.description %>
+                  </p>
+                </div>
+
+                <% }) %> <% }else{ %>
+                <p class="no-notification">No notification available</p>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </li>
+
+        <!-- notification icon end-->
+
+        <!-- Logout Button -->
+        <a href="/client/logout" class="nav-item nav-link logout-btn">Logout</a>
+      </div>
+    </div>
+

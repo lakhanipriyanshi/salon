@@ -1,0 +1,41 @@
+
+    <!-- Page Header Start -->
+    <div class="page-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2>Barber</h2>
+          </div>
+          <div class="col-12">
+            <a href="">Home</a>
+            <a href="">Single Barber</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Header End -->
+   
+    <div class="service">
+      <div class="container">
+        <div class="section-header text-center">
+          <p>Our Barber Team</p>
+          <h2><%= data1.name %></h2>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="service-item">
+              <div class="single-img">
+                <img
+                  src="http://localhost:3000<%= data1.img%>"
+                  alt="Image"
+                  style="max-height: 500px; max-width:500px; margin-top:20px"
+                />
+              </div>
+              <p style="margin-top: 50px"><%= data1.barbar_type %></p>
+              <a href="/client/barber" class="btn">Back to barber</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+

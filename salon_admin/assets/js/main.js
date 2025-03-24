@@ -34,18 +34,6 @@
   const updateFormattedUTCTime = () => {
     const currentDate = new Date();
 
-    // Format the current date and time
-    // const formattedDate = currentDate.toLocaleString('en-US', {
-    //   weekday: 'long', // e.g., "Monday"
-    //   year: 'numeric', // e.g., "2024"
-    //   month: 'long', // e.g., "December"
-    //   day: 'numeric', // e.g., "2"
-    //   hour: 'numeric', // e.g., "2"
-    //   minute: 'numeric', // e.g., "45"
-    //   second: 'numeric', // e.g., "30"
-    //   hour12: true // To use 12-hour format with AM/PM
-    // });
-
     // Get the day, month, year, hours, minutes, seconds, and AM/PM For UTC Time
     const dayOfWeek = currentDate.toLocaleString('en-IN', { weekday: 'long' }); // Sunday, Monday, etc.
     const month = currentDate.toLocaleString('en-IN', { month: 'long' }); // December, January, etc.

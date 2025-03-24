@@ -6,55 +6,41 @@ $(document).ready(function () {
     const formData = new FormData(this);
     const userId = $("#userId").val();
 
-    $.ajax({
-      url: "/admin/updateuser/" + userId,
-      type: "POST",
-      data: formData,
-      contentType: false,
-      processData: false,
-   
-      success: function (data) {
-        if (!data.success) {
-          adminToast(1, data.message, 2000);
+    
+    postFormCall(`/admin/updateuser/${userId}`, formData, function(res) {
+      if(res.flag === 1){
+        adminToast(1,res.msg,2000);
+        setTimeout(() => {
           window.location.replace("/admin/user");
-          return;
-        } 
-      },
-      error: function (error) {
-        const errorMessage = error.responseJSON
-          ? error.responseJSON.message
-          : "Unexpected error occurred.";
-          adminToast(0,"Error",2000);
-      },
-    });
+          }, 2000);
+      }
+      else{
+        adminToast(0,res.msg,2000);
+      }
+      });
   });
+  
+
+
   //Update Status 
   $(".update-status").on("click",function (e) {
     e.preventDefault();
     const userId = $(this).data('userid');
     const status = $(this).data('status');
 
-    $.ajax({
-      url:"/admin/updateuserstatus/" + userId,
-      type: "POST",
-      contentType: "application/json",
-      data:JSON.stringify({status}),
-      success:function(response){ 
-        adminToast(1,response.message||'Successfully updated',2000);
+    postCall(`/admin/updateuserstatus/${userId}` , {status}, function(res) {
+      if (res.flag === 1) {
+        adminToast(1, res.msg,2000);
         setTimeout(() => {
-          // window.location.replace("/admin/updateuser/" + userId);
-          window.location.replace("/admin/user");
-     
+        window.location.replace("/admin/user");
         }, 2000);
-       },
-      error:function(){
-        adminToast(2,"Error updating status",2000);
+      } else {
+        adminToast(0, res.msg,2000);
       }
-    })
+    });
   });
-
   // add
-
+  
   $("#adduserform").on("submit", function (e) {
     e.preventDefault();
 
@@ -66,7 +52,7 @@ $(document).ready(function () {
     let gender = $("#gender").val();
 
     
-    if (!username && !password && !email && !mobileno) {
+    if (!username || !password || !email || !mobileno) {
       adminToast(2, "All fields are required", 2000);
       return;
     }
@@ -100,24 +86,17 @@ $(document).ready(function () {
       return;
     }
 
-    $.ajax({
-      url: "/admin/adduser",
-      type: "POST",
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (data) {
-        if (!data.success) {
-          adminToast(2, data.message, 2000);
-          return;
-        }
-        adminToast(1,'User add sucessfully', 2000);
-        window.location.replace("/admin/user");
-      },
-      error: function (error) {
-        adminToast(0, "error", 2000);
-      },
-    });
+    postFormCall("/admin/adduser", formData, function(res) {
+      if(res.flag === 1){
+        adminToast(1,res.msg,2000);
+        setTimeout(() => {
+          window.location.replace("/admin/user");
+          }, 2000);
+      }
+      else{
+        adminToast(0,res.msg,2000);
+      }
+      });
   });
 
 
@@ -131,20 +110,17 @@ $(document).ready(function () {
   $(".deleteuser").on("click", function (event) {
     event.preventDefault();
     var id = $(this).data("user-id");
-    $.ajax({
-      url: "/admin/deleteuser/" + id,
-      type: "POST",
-      success: function (data) {
-        if (data.success) {
-          adminToast(1, data.message);
-          window.location.replace("/admin/user");
-        } else {
-          adminToast(0, data.message);
-        }
-      },
-      error: function (error) {
-        adminToast(0, "Error: " + error);
-      },
+
+    postCall(`/admin/deleteuser/${id}` , {}, function(res) {
+      if (res.flag === 1) {
+        adminToast(1, res.msg,2000);
+        setTimeout(() => {
+        window.location.replace("/admin/user");
+        }, 2000);
+      } else {
+        adminToast(0, res.msg,2000);
+      }
     });
+    
   });
 });

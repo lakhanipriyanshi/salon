@@ -1,5 +1,3 @@
-const { category } = require("../models/category.model");
-
 require("dotenv").config();
 
 module.exports = {

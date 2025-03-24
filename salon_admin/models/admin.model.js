@@ -16,8 +16,8 @@ module.exports = {
 };
 
 
-//const { error_res, success_res, log1 } = require("../lib/general.lib");
-//const { decryption, encryption } = require("../lib/mycrypt.lib");
+//const { error_res, success_res, log1 } = require("../utils/general.lib");
+//const { decryption, encryption } = require("../utils/mycrypt.lib");
 //const { db } = require("../utils/db.helper");
 //const { deleteAuthToken } = require("./adminToken.model");
 //const table = "tbl_admin";

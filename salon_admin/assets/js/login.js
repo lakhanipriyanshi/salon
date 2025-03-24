@@ -63,3 +63,25 @@ jQuery(function() {
       })
    });
 });
+
+
+
+
+$(document).ready(function(){
+   $('#form-login').on("submit",function(e){
+      e.preventDefault();
+      let email = $("#email").val();
+      let password = $("#password").val();
+
+      postCall("/admin/login" , {email,password}, function(res) {
+         if (res.flag === 1) {
+           adminToast(1, res.msg,2000);
+           setTimeout(() => {
+           window.location.replace("/admin/dashboard");
+           }, 2000);
+         } else {
+           adminToast(0, res.msg,2000);
+         }
+       });
+   });
+});

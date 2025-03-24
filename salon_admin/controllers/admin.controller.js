@@ -1,49 +1,40 @@
 require("dotenv").config();
 const ejs = require("ejs");
-const path = require("path");
-const { encryption, decryption } = require("../lib/mycrypt.lib");
-const {
-  log1,
-  success_res,
-  formatDateTime,
-  shownotifications,
-  error_res,
-} = require("../lib/general.lib");
-const { custom_validation } = require("../lib/validation.lib");
+const multer = require("multer");
+const bcrypt = require("bcrypt");
+
 const Constants = require("../config/constant");
+const { encryption, decryption } = require("../utils/mycrypt.lib");
+const { log1, success_res, formatDateTime, shownotifications, error_res} = require("../utils/general.lib");
+const { custom_validation } = require("../utils/validation.lib");
 const { generateAuthToken } = require("../service/adminToken");
 const { getAdmin } = require("../service/admin");
+
 const { admin } = require("../models/admin.model");
-const multer = require("multer");
 const { service } = require("../models/service.model");
 const { barber } = require("../models/barber.model");
-const { ObjectId } = require("mongodb");
 const { about } = require("../models/about.model");
 const { User } = require("../models/user.model");
 const { gallery } = require("../models/gallery.model");
 const { category } = require("../models/category.model");
 const { appoinmentbook } = require("../models/appoinmentbook.model");
 const { notification } = require("../models/notification.model");
-const { log } = require("console");
-const bcrypt = require("bcrypt");
 
-// const { title } = require("process");
 
 //multer disk storage setup
-
 let index = 1;
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    if (file.fieldname === 'user_images') {
-      cb(null, 'public/uploads/user_images');
-    } else if (file.fieldname === 'service_images') {
-      cb(null, 'public/uploads/service_images');
-    } else if (file.fieldname === 'barber_images') {
-      cb(null, 'public/uploads/barber_images');
-    } else if (file.fieldname === 'category_images') {
-      cb(null, 'public/uploads/category_images');
-    }else {
-      cb(new Error('Invalid field name'), null);
+    if (file.fieldname === "user_images") {
+      cb(null, "public/uploads/user_images");
+    } else if (file.fieldname === "service_images") {
+      cb(null, "public/uploads/service_images");
+    } else if (file.fieldname === "barber_images") {
+      cb(null, "public/uploads/barber_images");
+    } else if (file.fieldname === "category_images") {
+      cb(null, "public/uploads/category_images");
+    } else {
+      cb(new Error("Invalid field name"), null);
     }
   },
   filename: function (req, file, cb) {
@@ -51,6 +42,7 @@ const storage = multer.diskStorage({
     index++;
   },
 });
+
 //Define maximum fileupload size(1 mb)
 const maxSize = 1 * 1000 * 1000;
 const upload = multer({
@@ -70,67 +62,79 @@ const upload = multer({
       return cb(err);
     }
   },
-}).fields([{ name: 'user_images'}, { name: 'service_images'},{name:'barber_images'},{name:'category_images'}]); 
+}).fields([
+  { name: "user_images" },
+  { name: "service_images" },
+  { name: "barber_images" },
+  { name: "category_images" },
+]);
 
-
+// GET
 const getLogin = async (req, res) => {
   log1("getLogin");
-  if (req.session.admin) {
-    return res.redirect("/admin/dashboard");
-  }
-  return res.render("admin/login", {
-    layout: "./layouts/auth-layout",
-    header: {
-      title: "Login",
-    },
-    footer: {
-      js: "login.js",
-    },
-  });
+  try{
+    if (req.session.admin) {
+      return res.redirect("/admin/dashboard");
+    }
+    return res.render("admin/login", {
+      layout: "./layouts/auth-layout",
+      header: { 
+        title: "Login",
+      },
+      footer: {
+        js: "login.js",
+      },
+    });
+  }catch(error){
+    console.error("getLogin--------->",error);
+    return res.json(error_res("Something Wrong"));
+  };
 };
 
 const getDashboard = async (req, res) => {
   log1("getDashboard");
-  
-  const users = await User.countDocuments({});
-  const servicecount = await service.countDocuments({});
-  const barbercount = await barber.countDocuments({});
-  const Category = await category.countDocuments({});
-  const booking = await appoinmentbook.countDocuments({});
+    try{
+      const users = await User.countDocuments({});
+      const servicecount = await service.countDocuments({});
+      const barbercount = await barber.countDocuments({});
+      const Category = await category.countDocuments({});
+      const booking = await appoinmentbook.countDocuments({});
 
-  const notificationDetails = await shownotifications();
-  // console.log('notification----------------------------',notificationDetails);
+      const notificationDetails = await shownotifications();
 
-  return res.render("admin/dashboard", {
-    layout: "./layouts/admin-layout",
-    header: {
-      title: "Dashboard",
-      name: "Admin",
-      notification: notificationDetails,   
-    },
-    data: {
-      label: "Dashboard",
-      id: "dashboard",
-    },
-    footer: {
-      js: "dashboard.js",
-    },
-    users,
-    service: servicecount,
-    barber: barbercount,
-    Category,
-    booking,
-  });
+      return res.render("admin/dashboard", {
+        layout: "./layouts/admin-layout",
+        header: {
+          title: "Dashboard",
+          name: "Admin",
+          notification: notificationDetails,
+        },
+        data: {
+          label: "Dashboard",
+          id: "dashboard",
+        },
+        footer: {
+          js: "dashboard.js",
+        },
+        users,
+        service: servicecount,
+        barber: barbercount,
+        Category,
+        booking,
+      });
+    }catch(error){
+      console.error("getDashboard--------->",error);
+      return res.json(error_res("Something Wrong"));
+    }
 };
 
-//For View UserList
 const getUser = async (req, res) => {
   log1("getUser");
-  
+  try {
   const userId = req.body.userId;
   var page = Number(req.query.page) || 1;
   var perpage = 5;
-  try {
+ 
     const users = await User.find({})
       .sort({ _id: -1 })
       .skip((page - 1) * perpage)
@@ -139,6 +143,7 @@ const getUser = async (req, res) => {
     const notificationDetails = await shownotifications(userId);
     const count = await User.countDocuments();
     const pages = Math.ceil(count / perpage);
+
     return res.render("admin/user", {
       layout: "./layouts/admin-layout",
       header: {
@@ -158,22 +163,20 @@ const getUser = async (req, res) => {
       pages,
     });
   } catch (error) {
-    console.error("Error fetching services:", error);
-    res.status(500).send("Error fetching services");
+    console.error("getUser------------->",error);
+    return res.json(error_res("Error fetching services"));
   }
 };
 
 const getadduser = async (req, res) => {
   log1("getadduser");
-
-  const notificationDetails = await shownotifications();
   try {
+  const notificationDetails = await shownotifications();
     return res.render("admin/adduser", {
       layout: "./layouts/admin-layout",
       header: {
         title: "User",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -185,7 +188,8 @@ const getadduser = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).send("server error");
+    console.error("getadduser------------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
@@ -196,14 +200,13 @@ const getUpdateUser = async (req, res) => {
     const notificationDetails = await shownotifications();
     const users = await User.findById(id);
     if (!users) {
-      return res.status(404).send("users not found");
+      return res.json(error_res("users not found"));
     }
     return res.render("admin/updateuser", {
       layout: "./layouts/admin-layout",
       header: {
         title: "Users",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -216,26 +219,25 @@ const getUpdateUser = async (req, res) => {
       users,
     });
   } catch (error) {
-    console.error("Error fetching service:", error);
-    res.status(500).send("Server error");
+    console.error("getUpdateUser-------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
 const getupdateuserstatus = async (req, res) => {
-  log1("updateuserstatus");
-  const id = req.params.id;
+  log1("getupdateuserstatus");
   try {
+    const id = req.params.id;
     const notificationDetails = await shownotifications();
     const users = await User.findById(id);
     if (!users) {
-      return res.status(404).send("users not found");
+      return res.json(error_res("users not found"));
     }
     return res.render("admin/updateuser", {
       layout: "./layouts/admin-layout",
       header: {
         title: "Users",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -248,15 +250,16 @@ const getupdateuserstatus = async (req, res) => {
       users,
     });
   } catch (error) {
-    console.error("Error fetching service:", error);
-    res.status(500).send("Server error");
+    console.error("getupdateuserstatus-------->",error);
+    return res.json(error_res("server error"));
   }
 };
+
 const getservice = async (req, res) => {
   log1("getservice");
-  const page = Number(req.query.page) || 1;
-  const perpage = 10;
   try {
+    const page = Number(req.query.page) || 1;
+    const perpage = 10;
     const notificationDetails = await shownotifications();
     const services = await service
       .find({})
@@ -271,7 +274,6 @@ const getservice = async (req, res) => {
       header: {
         title: "Services",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -286,16 +288,16 @@ const getservice = async (req, res) => {
       pages,
     });
   } catch (error) {
-    console.error("Error fetching services:", error);
-    return res.status(500).send("Error fetching services");
+    console.error("getservice-------->",error);
+    return res.json(error_res("error fetching service"));
   }
 };
 
 const getbookappoinment = async (req, res) => {
   log1("getbookappoinment");
-  const page = Number(req.query.page) || 1;
-  const perpage = 10;
   try {
+    const page = Number(req.query.page) || 1;
+    const perpage = 10;
     const notificationDetails = await shownotifications();
     const book = await appoinmentbook
       .aggregate([
@@ -382,7 +384,7 @@ const getbookappoinment = async (req, res) => {
             barbername: 1,
             bookdate: "$bookdate",
             status: "$status",
-            userId:"$userInformation._id",
+            userId: "$userInformation._id",
           },
         },
       ])
@@ -416,21 +418,20 @@ const getbookappoinment = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("error fetching server", error);
-    return res.status(500).json({ message: "Server error", error });
+    console.error("getbookappoinment-------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
 const getaddservice = async (req, res) => {
   log1("getaddservice");
-
+  try {
   const notificationDetails = await shownotifications();
   return res.render("admin/addservice", {
     layout: "./layouts/admin-layout",
     header: {
       title: "Add Service",
       name: "Admin",
-
       notification: notificationDetails,
     },
     data: {
@@ -441,7 +442,11 @@ const getaddservice = async (req, res) => {
       js: "addservice.js",
     },
   });
+}catch(error){
+  console.error("getaddservice-------------->",error);
+}
 };
+
 const getupdateservice = async (req, res) => {
   log1("getupdateservice");
   const id = req.params.id;
@@ -449,14 +454,13 @@ const getupdateservice = async (req, res) => {
     const notificationDetails = await shownotifications();
     const services = await service.findById(id);
     if (!services) {
-      return res.status(404).send("Service not found");
+      return res.json(error_res("service not found"));
     }
     return res.render("admin/updateservice", {
       layout: "./layouts/admin-layout",
       header: {
         title: "Update Service",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -469,26 +473,26 @@ const getupdateservice = async (req, res) => {
       service: services,
     });
   } catch (error) {
-    console.error("Error fetching service:", error);
-    res.status(500).send("Server error");
+    console.error("getupdateservice----------------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
 const getupdatebarber = async (req, res) => {
+  log1("getupdatebarber");
   const id = req.params.id;
   try {
     const barbers = await barber.findById(id);
     const notificationDetails = await shownotifications();
 
     if (!barbers) {
-      return res.status(404).send("barber not found");
+      return res.json(error_res("barber not found"));
     }
     return res.render("admin/updatebarber", {
       layout: "./layouts/admin-layout",
       header: {
         title: "Update barber",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -501,19 +505,19 @@ const getupdatebarber = async (req, res) => {
       barber: barbers, // Send service data to the view
     });
   } catch (error) {
-    console.error("Error fetching service:", error);
-    res.status(500).send("Server error");
+    console.error("getupdatebarber----------------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
 const getupdateabout = async (req, res) => {
+  log1("getupdateabout");
   const id = req.params.id;
   try {
     const abouts = await about.findById(id);
-
     const notificationDetails = await shownotifications();
     if (!abouts) {
-      return res.status(404).send("About not found");
+      return res.json(error_res("about not found"));
     }
 
     return res.render("admin/updateabout", {
@@ -521,7 +525,6 @@ const getupdateabout = async (req, res) => {
       header: {
         title: "Update About",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -534,8 +537,8 @@ const getupdateabout = async (req, res) => {
       about: abouts,
     });
   } catch (error) {
-    console.error("Error fetching about:", error);
-    res.status(500).send("Server error");
+    console.error("getupdateabout------------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
@@ -543,14 +546,13 @@ const getabout = async (req, res) => {
   log1("getAbout");
   try {
     const abouts = await about.find();
-
     const notificationDetails = await shownotifications();
+  
     return res.render("admin/about", {
       layout: "./layouts/admin-layout",
       header: {
         title: "About Us",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -563,17 +565,16 @@ const getabout = async (req, res) => {
       abouts,
     });
   } catch (error) {
-    console.error("Error fetching services:", error);
-    res.status(500).send("Error fetching services");
+    console.error("getAbout--------->",error);
+    return res.json(error_res("error fetching service"));
   }
 };
 
 const getBarber = async (req, res) => {
   log1("getBarber");
-  const perpage = 10;
-  const page = Number(req.query.page) || 1;
-
   try {
+    const perpage = 10;
+    const page = Number(req.query.page) || 1;
     const barbers = await barber
       .find()
       .skip((page - 1) * perpage)
@@ -589,7 +590,6 @@ const getBarber = async (req, res) => {
       header: {
         title: "barber",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -604,31 +604,33 @@ const getBarber = async (req, res) => {
       pages,
     });
   } catch (error) {
-    console.error("Error fetching services:", error);
-    res.status(500).send("Error fetching services");
+    console.error("getBarber------->",error);
+    return res.json(error_res("error fetching barber"));
   }
 };
 
 const getaddbarber = async (req, res) => {
   log1("getaddbarber");
-
-  const notificationDetails = await shownotifications();
-  return res.render("admin/addbarber", {
-    layout: "./layouts/admin-layout",
-    header: {
-      title: "Add Barber",
-      name: "Admin",
-
-      notification: notificationDetails,
-    },
-    data: {
-      label: "AddBaber",
-      id: "AddBaber",
-    },
-    footer: {
-      js: "addbarber.js",
-    },
-  });
+  try{
+    const notificationDetails = await shownotifications();
+    return res.render("admin/addbarber", {
+      layout: "./layouts/admin-layout",
+      header: {
+        title: "Add Barber",
+        name: "Admin",
+        notification: notificationDetails,
+      },
+      data: {
+        label: "AddBaber",
+        id: "AddBaber",
+      },
+      footer: {
+        js: "addbarber.js",
+      },
+    });
+  }catch(error){
+    console.error("getaddbarber------->",error);
+  }
 };
 
 const getcategory = async (req, res) => {
@@ -651,7 +653,6 @@ const getcategory = async (req, res) => {
       header: {
         title: "Category",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -666,7 +667,8 @@ const getcategory = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).send("server error");
+    console.error("getcategory----------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
@@ -691,7 +693,8 @@ const getaddcategory = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).send("server error");
+    console.error("getaddcategory---------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
@@ -735,7 +738,6 @@ const getgallery = async (req, res) => {
       header: {
         title: "gallery",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -750,9 +752,9 @@ const getgallery = async (req, res) => {
         js: "gallery.js",
       },
     });
-  } catch (err) {
-    console.error("Error fetching gallery:", err);
-    res.status(500).send("Server Error");
+  } catch (error) {
+    console.error("getgallery------------>",error);
+    return res.json(error_res("server error"));
   }
 };
 
@@ -783,8 +785,8 @@ const getsetting = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching admin:", error);
-    return res.status(500).send("Server error");
+    console.error("getsetting--------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
@@ -800,7 +802,6 @@ const getaddgallery = async (req, res) => {
       header: {
         title: "gallery",
         name: "Admin",
-
         notification: notificationDetails,
       },
       data: {
@@ -813,7 +814,8 @@ const getaddgallery = async (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).send("Innternal server error");
+    console.error("getaddgallery------------->",error);
+    return res.json(error_res("server error"));
   }
 };
 
@@ -821,194 +823,198 @@ const getlogout = (req, res) => {
   log1("logout");
   req.session.destroy((err) => {
     if (err) {
-      console.error("Logout error:", err);
-      res.status(500).send("failed to log out");
+      return res.json(error_res("failed to log out"));
     } else {
       res.redirect("/admin/login");
     }
   });
 };
 
+// POST
 const postLogin = async (req, res) => {
   log1("postLogin");
-  let param = req.body;
-  const validate = custom_validation(param, "admin.login");
-  if (validate.flag != 1) {
-    return res.json(validate);
+
+  try {
+    let param = req.body;
+    const validate = custom_validation(param, "admin.login");
+    if (validate.flag != 1) {
+      return res.json(validate);
+    }
+    const result = await admin.findOne({ email: param.email });
+
+    if (!result) {
+      return res.json(error_res("Invalid credentials. Please try again."));
+    }
+    let decrypt = await decryption(param.password, result.password);
+    if (!decrypt) {
+      return res.json(error_res("Invalid credentials. Please try again."));
+    }
+    delete result.password;
+    req.session.admin = result;
+    await generateAuthToken(result._id, req);
+
+    return res.json(
+      success_res("Login successful! Welcome to your Salon Admin Panel.", result)
+    );
+  }catch(error){
+    console.error("postLogin-------->",error);
+    return res.json(error_res("server error"));
   }
-
-  //Create
-  //const encryptedPassword = await encryption(param.password);
-  //const result = await admin.create({ email: param.email, password: encryptedPassword });
-
-  //FIND
-  const result = await admin.findOne({ email: param.email });
-
-  if (!result) {
-    return res.json({ flag: 0, msg: "Invalid credentials. Please try again." });
-  }
-  let decrypt = await decryption(param.password, result.password);
-  if (!decrypt) {
-    return res.json({ flag: 0, msg: "Invalid credentials. Please try again." });
-  }
-  delete result.password;
-  req.session.admin = result;
-  await generateAuthToken(result._id, req);
-
-  return res.json(
-    success_res("Login successful! Welcome to your Salon Admin Panel.", result)
-  );
 };
 
 const postaddservice = (req, res) => {
+  log1("postaddservice");
   upload(req, res, async function (err) {
     if (err) {
-      console.error("Error during file upload:", err);
-      return res.status(400).json({ success: false, message: err.message });
+      return res.json(error_res(err.message));
     }
+    try{
+      let body = req.body;
 
-    let imageArray =[];
-    if(req.files.service_images){
-      req.files.service_images.map((file) => {
-        imageArray.push(`http://localhost:3000/uploads/service_images/${file.filename}`);
-      });
-    }
-    try {
-      const newService = new service({
-        servicename: req.body.servicename,
-        description: req.body.description,
-        price: req.body.price,
-        img: imageArray,
-      });
+      const validate = custom_validation( body ,"admin.add_service");
+      if (validate.flag != 1) {
+        return res.json(validate);
+      }
+      const servicename = body.servicename;
+      const description = body.description;
+      const price = body.price;      
+    
+      let imageArray = [];
+      if (req.files.service_images) {
+        req.files.service_images.map((file) => {
+          imageArray.push(
+            `http://localhost:3000/uploads/service_images/${file.filename}`
+          );
+        });
+      }
 
-      await newService.save();
+        const newService = await service.create({
+          servicename,
+          description,
+          price,
+          img: imageArray,
+        });    
+        return res.json(success_res("Service added successfully!", newService));
 
-      return res.json({
-        success: true,
-        message: "Service added successfully!",
-        service: newService,
-      });
-    } catch (error) {
-      console.error("Error saving service:", error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to add service" });
-    }
+      } catch (error) {
+        console.error("postaddservice------->",error);
+        return res.json(error_res("Failed to add service"));
+      }
   });
 };
 
 const postaddbarber = (req, res) => {
+  log1("postaddbarber");
   upload(req, res, async function (err) {
     if (err) {
-      console.error("Error during file upload:", err);
-      return res.status(400).json({ success: false, message: err.message });
-    }
-    let imageArray = [];
-    if(req.files.barber_images){
-      req.files.barber_images.map((file) => {
-        imageArray.push(`/uploads/barber_images/${file.filename}`);
-      });
+      return res.json(error_res(err.message));
     }
     try {
-      const newbarber = new barber({
-        name: req.body.name,
-        barbar_type: req.body.barbar_type,
-        img: imageArray,
-      });
+        let body = req.body; 
+        
+        const validate = custom_validation(body, "admin.add_barber");
+        if (validate.flag != 1) {
+          return res.json(validate);
+        }
+        let imageArray = [];
+        if (req.files.barber_images) {
+          req.files.barber_images.map((file) => {
+            imageArray.push(`/uploads/barber_images/${file.filename}`);
+          });
+        }
 
-      await newbarber.save();
-
-      return res.json({
-        success: true,
-        message: "barber added successfully!",
-        barber: newbarber,
-      });
+        const newbarber = await barber.create({
+          name: body.name,
+          barbar_type: body.barbar_type,
+          img: imageArray,
+        });
+        return res.json(success_res("barber added successfully!", newbarber));
     } catch (error) {
-      console.error("Error saving barber:", error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to add barber" });
+      console.error("postaddbarber---------->",error);
+      return res.json(error_res("Failed to add barber"));
     }
   });
 };
 
 const postadduser = async (req, res) => {
-  log("postadduser");
+  log1("postadduser");
   upload(req, res, async function (err) {
     if (err) {
-      console.error("Error uploading", err);
-      return res.status(400).json({ success: false, message: err.message });
+      return res.json(error_res(err.message));
     }
-
-    let imageArray =[];
-    if(req.files.user_images){
-      req.files.user_images.map((file) => {
-        imageArray.push(`http://localhost:3000/uploads/user_images/${file.filename}`);
-      });
-    }
-    const username = req.body.username;
-    const password = req.body.password;
-    const email = req.body.email;
-    const mobileno = req.body.mobileno;
-    const gender = req.body.gender;
-
-    const existingemail = await User.findOne({ email });
-    console.log("Existing user:", existingemail);
-    if (existingemail) {
-      return res.status(200).json({
-        isSuccess: false,
-        message: `The username "${email}" is already taken. Please choose a different one.`,
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
     try {
-      const user = await User.create({
-        username: username,
-        password: hashedPassword,
-        email: email,
-        mobileno: mobileno,
-        gender: gender,
-        img: imageArray,
-      });
-      return res
-        .status(200)
-        .json({ success: true, message: "user added succesfully", user: user });
-    } catch (error) {
-      console.error("Error add", error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to add user" });
-    }
+      let body = req.body;
+      const validate = custom_validation(body, "admin.add_user");
+      if (validate.flag != 1) {
+        return res.json(validate);
+      }
+      let imageArray = [];
+      if (req.files.user_images) {
+        req.files.user_images.map((file) => {
+          imageArray.push(
+            `http://localhost:3000/uploads/user_images/${file.filename}`
+          );
+        });
+      }
+      const username = body.username;
+      const password = body.password;
+      const email = body.email;
+      const mobileno = body.mobileno;
+      const gender = body.gender;
+
+      const existingemail = await User.findOne({ email });
+      if (existingemail) {
+        return res.json(
+          error_res(
+            `The username "${email}" is already taken. Please choose a different one.`
+          )
+        );
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+        const user = await User.create( {
+          username: username,
+          password: hashedPassword,
+          email: email,
+          mobileno: mobileno,
+          gender: gender,
+          img: imageArray,
+        });
+        return res.json(success_res("User added successfully!", user));
+      } catch (error) {
+        console.error("postadduser---------->",error);
+        return res.json(error_res("Failed to add user"));
+      }
   });
 };
 
 const postaddgallery = async (req, res) => {
+  log1("postaddgallery");
   upload(req, res, async function (err) {
     if (err) {
-      console.error("Error during file upload:", err);
-      return res.status(400).json({ success: false, message: err.message });
-    }
-    let imageArray =[];
-    if(req.files.category_images){
-      req.files.category_images.map((file) => {
-        imageArray.push(`/uploads/category_images/${file.filename}`);
-      });
-    }
-    const { category: categoryId } = req.body;
-
-    if (!categoryId) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Category is required." });
+      return res.json(error_res(err.message));
     }
     try {
+      let body = req.body;   
+      const { category: categoryId } = body;
+      
+      if (!categoryId) {
+        return res.json(error_res("Category is required."));
+      }
+
       const categoryExists = await category.findById(categoryId);
       if (!categoryExists) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Invalid category ID." });
+        return res.json(error_res("Invalid Category id"));
       }
+
+      let imageArray = [];
+      if (req.files.category_images) {
+        req.files.category_images.map((file) => {
+          imageArray.push(`/uploads/category_images/${file.filename}`);
+        });
+      }
+      
       const existingGallery = await gallery.findOne({
         categorytype: categoryId,
       });
@@ -1019,62 +1025,91 @@ const postaddgallery = async (req, res) => {
           { $push: { img: { $each: imageArray } } },
           { new: true }
         );
-        return res.json({
-          success: true,
-          message: "Gallery updated successfully!",
-        });
-      } else {
-        await gallery.create({
+        return res.json(success_res("Gallery updated successfully!"));
+      } 
+      else {
+
+        const Gallery = await gallery.create({
           categorytype: categoryId,
           img: imageArray,
         });
-
-        return res.json({
-          success: true,
-          message: "Gallery added successfully!",
-        });
+     
+        return res.json(success_res("Gallery added successfully!", Gallery));
       }
     } catch (error) {
-      console.error("Error saving gallery:", error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to add/update gallery" });
+      console.error("postaddgallery------------------->",error);
+      return res.json(error_res("Failed to add gallery"));
     }
   });
 };
 
 const postaddcategory = async (req, res) => {
+  log1("postaddcategory");
   try {
-    const categorytype = req.body.categorytype;
-    const status = req.body.status;
+    let body = req.body;
+    const validate = custom_validation(body, "admin.add_category");
+    if (validate.flag != 1) {
+      return res.json(validate);
+    }
+    const categorytype = body.categorytype;
+    const status = body.status;
+    if (!categorytype) {
+      return res.json(error_res("Categorytype required"));
+    }
+
     const existingCategory = await category.findOne({ categorytype });
 
     if (existingCategory) {
-      return res.status(400).json({
-        success: false,
-        message: `Category "${categorytype}" already exists`,
-      });
+      return res.json(error_res(`Category "${categorytype}" already exists`));
     }
+
     const Category = await category.create({
       categorytype,
       status: parseInt(status),
     });
-    return res
-      .status(200)
-      .json({ success: true, message: "Category added successfully" });
+    return res.json(success_res("category added successfully!", Category));
   } catch (error) {
-    return res
-      .status(500)
-      .json({ success: false, message: "Failed to add Category" });
+    console.error("postaddcategory------------------->",error);
+    return res.json(error_res("Failed to add category"));
   }
 };
 
+const postaddabout = (req, res) => {
+  log1("postaddabout");
+  upload(req, res, async function (err) {
+    if (err) {
+      return res.json(error_res(err.message));
+    }
+    try {
+    let imageArray = [];
+    if (req.files.service_images) {
+      req.files.service_images.map((file) => {
+        imageArray.push(`/uploads/service_images/${file.filename}`);
+      });
+    }   
+      const newabout = await about.create({
+        experince: req.body.experince,
+        description: req.body.description,
+        img: imageArray,
+      });
+      return res.json(success_res("about added successfully!", newabout));
+    } catch (error) {
+      console.error("postaddabout----------------->", error);
+      return res.json(error_res("Failed to add about"));
+    }
+  });
+};
+
 const postupdatestatus = async (req, res) => {
+  log1("postupdatestatus");
   try {
-    const categoryId = req.body.categoryId;
-
+    let body = req.body;
+    const validate = custom_validation(body, "admin.update_category_status");
+    if (validate.flag != 1) {
+      return res.json(validate);
+    }
+    const categoryId = body.categoryId;
     const Category = await category.findById(categoryId);
-
     const updateStatus =
       Category.status === Constants?.CATEGORY_STATUS?.INACTIVE
         ? Constants?.CATEGORY_STATUS?.ACTIVE
@@ -1085,138 +1120,101 @@ const postupdatestatus = async (req, res) => {
       { new: true }
     );
 
-    res.status(200).json({
-      message: "Category status updated successfully",
-    });
+    return res.json(success_res("Category status updated successfully"));
   } catch (error) {
-    console.error("Error updating category status:", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("postupdatestatus-------------->",error);
+    return res.json(error_res("Internal server error"));
   }
 };
 
-const postaddabout = (req, res) => {
-  upload(req, res, async function (err) {
-    if (err) {
-      console.error("Error during file upload:", err);
-      return res.status(400).json({ success: false, message: err.message });
-    }
-let imageArray = [];
-    if(req.files.service_images){
-      req.files.service_images.map((file) => {
-        imageArray.push(`/uploads/service_images/${file.filename}`);
-      });
-    }
-    try {
-      const newabout = await about.create({
-        experince: req.body.experince,
-        description: req.body.description,
-        img: imageArray,
-      });
-      return res.json({
-        success: true,
-        message: "about added successfully!",
-        service: newabout,
-      });
-    } catch (error) {
-      console.error("Error saving about:", error);
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to add about" });
-    }
-  });
-};
-
 const postdeleteservice = async (req, res) => {
+  log1(postdeleteservice);
   try {
     const id = req.params.id;
     if (!id) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid service ID" });
+      return res.json(error_res("Invalid service ID"));
     }
     const deleteservice = await service.findByIdAndDelete(id);
-    return res
-      .status(200)
-      .json({ success: true, message: "service deleted successfully" });
+    return res.json(success_res("service deleted successfully"));
   } catch (error) {
-    console.error("error---", error);
-    return res
-      .status(400)
-      .json({ success: false, message: "failed to delete service" });
+    console.error("postdeleteservice---------------->", error);
+    return res.json(error_res("failed to delete service"));
   }
 };
 
 const postdeletebarber = async (req, res) => {
+  log1("postdeletebarber");
   try {
     const id = req.params.id;
     if (!id) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Invalid barber ID" });
+      return res.json(error_res("Invalid barber ID"));
     }
     const deletebarber = await barber.findByIdAndDelete(id);
-    return res
-      .status(200)
-      .json({ success: true, message: "barber deleted successfully" });
+    return res.json(success_res("barber deleted successfully", deletebarber));
   } catch (error) {
-    console.log("error---", error);
-    return res
-      .status(400)
-      .json({ success: false, message: "failed to delete barber" });
+    console.error("postdeletebarber-------------->",error);
+    return res.json(error_res("failed to delete barber"));
   }
 };
 
 const postdeleteuser = async (req, res) => {
+  log1("postdeleteuser");
   try {
     const id = req.params.id;
     if (!id) {
-      return res
-        .status(400)
-        .json({ success: false, message: "invalid user id" });
+      return res.json(error_res("invalid user id"));
     }
     const users = await User.findByIdAndDelete(id);
-    return res
-      .status(200)
-      .json({ success: true, message: "user deleted successfully" });
+    return res.json(success_res("user deleted successfully"));
   } catch (error) {
-    console.log("error----", error);
-    return res.status(400).json({ message: error.message });
+    console.error("postdeleteuser------------->",error);
+    return res.json(error_res(error.message));
   }
 };
 
 const postdeletecategory = async (req, res) => {
+  log1("postdeletecategory");
   try {
     const id = req.params.id;
     if (!id) {
-      return res.status(400).json({ success: false, message: "Invalid id" });
+      return res.json(error_res("invalid id"));
     }
     const delcategory = await category.findByIdAndDelete(id);
-    return res
-      .status(200)
-      .json({ success: true, message: "delete category successfully" });
+    return res.json(success_res("delete category successfully"));
   } catch (error) {
-    return res.status(400).json({ message: "Server error" });
+    console.error("postdeletecategory-------->",error);
+    return res.json(error_res("Server error"));
   }
 };
 
 const postupdatebarber = async (req, res) => {
+  log1("postupdatebarber");
   upload(req, res, async function (err) {
+    if (err) {
+      return res.json(error_res(err.message));
+    }
     try {
-      const barberId = req.body.barberId;
-      if (!barberId) {
-        return res.status(400).json({ message: "barbar id required" });
+      let body = req.body;
+      const validate = custom_validation(body, "admin.update_barber");
+      if (validate.flag != 1) {
+        return res.json(validate);
       }
 
+      const { barberId, name, barbar_type } = body;
+      if (!barberId) {
+        return res.json(error_res("barbar id required"));
+      }
+   
       let updateObj = {};
-      if (req.body.name) {
-        updateObj["name"] = req.body.name;
+      if (name) {
+        updateObj["name"] = name;
       }
-      if (req.body.barbar_type) {
-        updateObj["barbar_type"] = req.body.barbar_type;
+      if (barbar_type) {
+        updateObj["barbar_type"] = barbar_type;
       }
-  
+
       let imageArray = [];
-      if(req.files.barber_images){
+      if (req.files.barber_images) {
         req.files.barber_images.forEach((file) => {
           imageArray.push(`/uploads/barber_images/${file.filename}`);
         });
@@ -1236,38 +1234,45 @@ const postupdatebarber = async (req, res) => {
           new: true,
         }
       );
-      return res
-        .status(200)
-        .json({ message: "barbar updated successfully", barbarupdate });
+
+      return res.json(success_res("barbar updated successfully", barbarupdate));
     } catch (err) {
-      console.log("Error", err);
-      return res.status(400).json({ message: err.message });
+      console.error("postupdatebarber-------------->", err);
+      return res.json(error_res(err.message));
     }
   });
 };
 
 const postupdateabout = (req, res) => {
-  upload(req, res, async function (error) {
+  log1("postupdateabout");
+  upload(req, res, async function (err) {
+    if (err) {
+      return res.json(error_res(err.message));
+    }
     try {
-      const aboutId = req.body.aboutId;
+      let body = req.body;
+      const validate = custom_validation(body, "admin.update_user");
+      if (validate.flag != 1) {
+        return res.json(validate);
+      }
+      const aboutId = body.aboutId;
       if (!aboutId) {
-        res.status(400).json({ message: "about id is required" });
+        return res.json(error_res("about id is required"));
       }
       let updateObj = {};
-      if (req.body.description) {
-        updateObj["description"] = req.body.description;
+      if (body.description) {
+        updateObj["description"] = body.description;
       }
-      if (req.body.experince) {
-        updateObj["experince"] = req.body.experince;
+      if (body.experince) {
+        updateObj["experince"] = body.experince;
       }
 
       let imageArray = [];
-        if(req.files.service_images){
+      if (req.files.service_images) {
         req.files.service_images.forEach((file) => {
           imageArray.push(`/uploads/service_images/${file.filename}`);
         });
       }
-      
 
       if (imageArray.length > 0) {
         updateObj["img"] = imageArray;
@@ -1282,39 +1287,47 @@ const postupdateabout = (req, res) => {
         },
         { new: true }
       );
-      return res.status(200).json({
-        success: true,
-        message: "about is successfully updated ",
-        aboutupdate,
-      });
+
+      return res.json(success_res("about updated successfully", aboutupdate));
     } catch (error) {
-      console.log("Error", err);
-      return res.status(400).json({ message: error.message });
+      console.error("postupdateabout--------------->",error);
+      return res.json(error_res(error.message));
     }
   });
 };
 
 const postupdateuser = async (req, res) => {
+  log1("postupdateuser");
   upload(req, res, async function (err) {
+    if (err) {
+      return res.json(error_res(err.message));
+    }
     try {
-      const userId = req.body.userId;
+      let body = req.body;
+      const validate = custom_validation(body, "admin.update_user");
+      if (validate.flag != 1) {
+        return res.json(validate);
+      }
+      const { userId, username, mobileno, gender } = body;
       if (!userId) {
-        return res.status(404).json({ message: "User id is required" });
+        return res.json(error_res("User id is required"));
       }
       let update_object = {};
-      if (req.body.username) {
-        update_object["username"] = req.body.username;
+      if (username) {
+        update_object["username"] = username;
       }
-      if (req.body.mobileno) {
-        update_object["mobileno"] = req.body.mobileno;
+      if (mobileno) {
+        update_object["mobileno"] = Number(mobileno);
       }
-      if (req.body.gender) {
-        update_object["gender"] = req.body.gender;
+      if (gender) {
+        update_object["gender"] = gender;
       }
       let imageArray = [];
-      if(req.files.user_images){
+      if (req.files.user_images) {
         req.files.user_images.forEach((file) => {
-          imageArray.push(`http://localhost:3000/uploads/user_images/${file.filename}`);
+          imageArray.push(
+            `http://localhost:3000/uploads/user_images/${file.filename}`
+          );
         });
       }
       if (imageArray.length > 0) {
@@ -1329,25 +1342,26 @@ const postupdateuser = async (req, res) => {
         },
         { new: true }
       );
-
-      console.log("userupdated----------------------", update_object);
-
-      return res
-        .status(200)
-        .json({ message: "user updated successfully", userupdate });
+      return res.json(success_res("User updated successfully", userupdate));
     } catch (err) {
-      console.log("Error", err);
-      return res.status(400).json({ message: err.message });
+      console.error("postupdateuser---------------->",err);
+      return res.json(error_res(err.message));
     }
   });
 };
 
 const postupdateuserstatus = async (req, res) => {
+  log1("postupdateuserstatus");
+  
+  let body = req.body;
+  const validate = custom_validation(body, "admin.update_user_status");
+  if (validate.flag != 1) {
+    return res.json(validate);
+  }
   const userId = req.params.id;
-  const status = req.body.status;
-
+  const status = body.status;
   if (!userId) {
-    return res.status(400).json({ message: "User ID is required" });
+    return res.json(error_res("User id is required"));
   }
   try {
     const userstatus = await User.findByIdAndUpdate(
@@ -1360,32 +1374,32 @@ const postupdateuserstatus = async (req, res) => {
       { new: true }
     );
     if (!userstatus) {
-      return res.status(404).json({ message: "User not found" });
+      return res.json(error_res("User not found"));
     }
-    return res
-      .status(200)
-      .json({ message: "User status updated successfully", userstatus });
+    return res.json(
+      success_res("User status updated successfully", userstatus)
+    );
   } catch (error) {
-    console.log("Error", error);
-    return res.status(400).json({ message: "Server error" });
+    console.error("postupdateuserstatus------------>",error);
+    return res.json(error_res("server error"));
   }
 };
 
 const postbookappoinmentupdatestatus = async (req, res) => {
   log1("postbookappoinmentupdatestatus");
-  const booksid = req.params.id;
-  const status = req.body.status;
-  const userId = req.body.userId;
-  // console.log("req.body-------------------------", req.body);
-  // console.log("req.params-------------------------", req.params);
-
-  if (!userId) {
-    console.log("userid not found", req.body.userId);
-    return res
-      .status(400)
-      .json({ message: "User id is required", success: false });
+  try { 
+  let body = req.body;
+  const validate = custom_validation(body, "admin.update_bookstatus");
+  if (validate.flag != 1) {
+    return res.json(validate);
   }
-  try {
+  const booksid = req.params.id;
+  const status = body.status;
+  const userId = body.userId;
+    if (!userId) {
+    return res.json(error_res("User id is required"));
+  }
+
     const bookstatus = await appoinmentbook.findByIdAndUpdate(
       booksid,
       {
@@ -1396,9 +1410,7 @@ const postbookappoinmentupdatestatus = async (req, res) => {
       { new: true }
     );
     if (!bookstatus) {
-      return res
-        .status(400)
-        .json({ message: "bookstatus not found", success: false });
+      return res.json(error_res("bookstatus not found"));
     }
 
     let description;
@@ -1407,8 +1419,7 @@ const postbookappoinmentupdatestatus = async (req, res) => {
     } else {
       description = "your Booking Appointment Rejected ";
     }
-    // console.log("description-----------------------------", description);
-
+    
     const user = await User.findById(userId);
 
     const createnotification = await notification.create({
@@ -1418,52 +1429,50 @@ const postbookappoinmentupdatestatus = async (req, res) => {
       notificationType: Constants?.NOTIFICATION_TYPE?.BOOk,
       is_user: true,
     });
-    // console.log(
-    //   "created notification-------------------------",
-    //   createnotification
-    // );
-
-    console.log("status----------------------------------", status);
-    return res.status(200).json({
-      message: "status updated successfully",
-      success: true,
-      bookstatus,
-    });
+    return res.json(success_res("status updated successfully", bookstatus));
   } catch (error) {
-    console.log("Error", error);
-    return res.status(400).json({ message: "Server error" });
+    console.error("postbookappoinmentupdatestatus---------->",error);
+    return res.json(error_res("Server error"));
   }
 };
 
 const postupdateservice = async (req, res) => {
-  log1("postupdateservice------------");
+  log1("postupdateservice");
   upload(req, res, async function (err) {
+    if (err) {
+      return res.json(error_res(err.message));
+    }
     try {
-      const serviceId = req.body.serviceId;
-      if (!serviceId) {
-        return res.status(400).json({ message: "Service ID is required" });
+      let body = req.body;
+      const validate = custom_validation(body, "admin.update_service");
+      if (validate.flag != 1) {
+        return res.json(validate);
       }
-
+      const { serviceId, servicename, description, price } = body;
+      if (!serviceId) {
+        return res.json(error_res("service id is required"));
+      }
+      
       let update_obj = {};
 
-      if (req.body.servicename) {
-        update_obj["servicename"] = req.body.servicename;
+      if (servicename) {
+        update_obj["servicename"] = servicename;
       }
 
-      if (req.body.description) {
-        update_obj["description"] = req.body.description;
+      if (description) {
+        update_obj["description"] = description;
       }
 
-      if (req.body.price) {
-        update_obj["price"] = req.body.price;
+      if (price) {
+        update_obj["price"] = price;
       }
       let imageArray = [];
-       
-    if(req.files.service_images){
-      req.files.service_images.forEach((file) => {
-        imageArray.push(`/uploads/service_images/${file.filename}`);
-      });
-    }
+
+      if (req.files.service_images) {
+        req.files.service_images.forEach((file) => {
+          imageArray.push(`/uploads/service_images/${file.filename}`);
+        });
+      }
       if (imageArray.length > 0) {
         update_obj["img"] = imageArray;
       }
@@ -1478,12 +1487,11 @@ const postupdateservice = async (req, res) => {
         },
         { new: true }
       );
-      return res
-        .status(200)
-        .json({ message: "service Updated", updateData: serviceupdate });
+
+      return res.json(success_res("service Updated", serviceupdate));
     } catch (error) {
-      console.log("error----------->", error);
-      return res.status(400).json({ message: error.message });
+      console.error("postupdateservice---------->",error);
+      return res.json(error_res(error.message));
     }
   });
 };
@@ -1491,48 +1499,51 @@ const postupdateservice = async (req, res) => {
 const postsetting = async (req, res) => {
   log1("postsetting");
   try {
+    
+    let body = req.body;
+    const validate = custom_validation(body, "admin.forgot_password");
+    if (validate.flag != 1) {
+      return res.json(validate);
+    }
     const adminId = req.params.adminId || req.params.id;
     if (!adminId) {
-      return res.status(404).json({ message: "AdminID is requird" });
+      return res.json(error_res("Admin id is required"));
     }
-    const { old_password, new_password, confirm_password } = req.body;
+    const { old_password, new_password, confirm_password } = body;
 
     if (!old_password || !new_password || !confirm_password) {
-      return res.status(400).json({ message: "Please fill all the field" });
+      return res.json(error_res("Please fill all the field"));
     }
 
     const adminRecord = await admin.findById(adminId);
     if (!adminRecord) {
-      return res.status(404).json({ message: "Admin not found" });
+      return res.json(error_res("Admin not found"));
     }
     const isMatch = await decryption(old_password, adminRecord.password);
     if (!isMatch) {
-      return res.status(404).json({ message: "Old password is incorrect" });
+      return res.json(error_res("Old password is incorrect"));
     }
 
     if (old_password === new_password) {
-      return res
-        .status(404)
-        .json({ message: "new password must be differnt from old password" });
+      return res.json(
+        error_res("new password must be differnt from old password")
+      );
     }
 
     if (new_password !== confirm_password) {
-      return req
-        .status(404)
-        .json({ message: "new password and confirm password must match" });
+      return res.json(
+        error_res("new password and confirm password must match")
+      );
     }
 
     adminRecord.password = await encryption(new_password);
     await adminRecord.save();
 
     delete req.session.admin;
-
-    return res
-      .status(200)
-      .json({ success: true, message: "password updated successfully" });
+    return res.json(success_res("password updated successfully"));
   } catch (error) {
-    console.error("Error updating password", error);
-    return res.status(500).json({ message: "Server error" });
+    console.error("postsetting-------->",error);
+    return res.json(error_res("Server error"));
   }
 };
 

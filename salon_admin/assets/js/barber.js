@@ -13,28 +13,16 @@ $(document).ready(function () {
       return;
     }
 
-    $.ajax({
-      url: "/admin/addbarber",
-      type: "POST",
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        if (response.success) {
-          adminToast(1, response.message, 2000);
-          setTimeout(() => {
-            window.location.replace("/admin/barber");
+    postFormCall("/admin/addbarber", formData, function(res) {
+      if(res.flag === 1){
+        adminToast(1,res.msg,2000);
+        setTimeout(() => {
+          window.location.replace("/admin/barber");
           }, 2000);
-        } else {
-          adminToast(0, response.message);
-        }
-      },
-      error: function (error) {
-        const errorMessage = error.responseJSON
-          ? error.responseJSON.message
-          : "Unexpected error occurred.";
-        adminToast(0, errorMessage);
-      },
+      }
+      else{
+        adminToast(0,res.msg,2000);
+      }
     });
   });
 
@@ -47,22 +35,16 @@ $(document).ready(function () {
   $(".deletebarber").on("click", function (event) {
     event.preventDefault();
     var id = $(this).data("barber-id");
-    $.ajax({
-      url: "/admin/deletebarber/" + id,
-      type: "POST",
-      success: function (response) {
-        if (response.success) {
-          adminToast(1, response.message || "deleted succesfully", 2000);
-          setTimeout(() => {
-            window.location.replace("/admin/barber");
-          }, 2000);
-        } else {
-          adminToast(0, response.message,2000);
-        }
-      },
-      error: function (error) {
-        adminToast(0, error);
-      },
+
+    postCall(`/admin/deletebarber/${id}` , {}, function(res) {
+      if (res.flag === 1) {
+        adminToast(1, res.msg,2000);
+        setTimeout(() => {
+        window.location.replace("/admin/barber");
+        }, 2000);
+      } else {
+        adminToast(0, res.msg,2000);
+      }
     });
   });
 
@@ -74,24 +56,16 @@ $(document).ready(function () {
     var formData = new FormData(this);
     var barberId = $("#barberId").val();
 
-    $.ajax({
-      url: "/admin/updatebarber/" + barberId,
-      type: "POST",
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        adminToast(1, response.message, 2000);
+    postFormCall(`/admin/updatebarber/${barberId}`, formData, function(res) {
+      if(res.flag === 1){
+        adminToast(1,res.msg,2000);
         setTimeout(() => {
           window.location.replace("/admin/barber");
-        }, 2000);
-      },
-      error: function (error) {
-        const errorMessage = error.responseJSON
-          ? error.responseJSON.message
-          : "Unexpected error occurred.";
-        adminToast(0, "Error", errorMessage);
-      },
+          }, 2000);
+      }
+      else{
+        adminToast(0,res.msg,2000);
+      }
     });
   });
 });

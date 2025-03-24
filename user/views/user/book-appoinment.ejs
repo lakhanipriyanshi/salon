@@ -1,0 +1,80 @@
+
+    <!-- Page Header Start -->
+    <div class="page-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2>Book Appoinment</h2>
+          </div>
+          <div class="col-12">
+            <a href="">Home</a>
+            <a href="">Book Appoinment </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Book-service Start -->
+    <center>
+      <form id="bookapo">
+        <br />
+        <div class="bookk">
+          <h2 style="color: #1d2434">Book Appoinment</h2>
+          <br />
+
+          <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label">Service:</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="service" id="service">
+                <option value="">Select service</option>
+                <% data.services.forEach(service => { %>
+                <option value="<%= service._id %>">
+                  <%= service.servicename %>
+                </option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label class="col-sm-2 col-form-label">Barber:</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="barber" id="barber">
+                <option value="">Select Barber</option>
+                <% data.barbar.forEach(barbar => { %>
+                <option value="<%= barbar._id %>"><%= barbar.name %></option>
+                <% }) %>
+              </select>
+            </div>
+         </div>
+          <div class="mb-3 row" id="bookdate">
+            <label class="col-sm-2 col-form-label">Datetime:</label>
+            <div class="col-sm-10">
+            <input type="date" id="date" name="date"  />
+            <select type="number" id="sHour" name="sHour">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+              <option>11</option>
+              <option>12</option>
+            </select>
+            <select id="sAMPM" name="sAMPM">
+              <option>AM</option>
+              <option>PM</option>
+            </select>
+            </div>
+          </div>
+          <br>
+          <button class="btn" type="submit">send request</button>
+        </div>
+      </form>
+    </center>
+
+    <!-- book-Service End -->

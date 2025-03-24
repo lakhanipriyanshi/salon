@@ -1,0 +1,56 @@
+
+<!-- Page Header Start -->
+    <div class="page-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2>Service</h2>
+          </div>
+          <div class="col-12">
+            <a href="">Home</a>
+            <a href="">Service</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Service Start -->
+    <div class="service">
+      <div class="container">
+        <div class="section-header text-center">
+          <p>Our Salon Services</p>
+          <h2>Best Salon and Barber Services for You</h2>
+        </div>
+        <div class="row">
+          <% if(data.services && data.services.length > 0 ) { %> <%
+          data.services.forEach((service)=>{ %>
+          <div class="col-lg-4 col-md-6">
+            <div class="service-item">
+              <div class="service-img">
+                <% if (service.img.length > 0) { %>
+                <img
+                  src="http://localhost:3000<%= service.img %>"
+                  alt="Service Image"
+                  width="50"
+                />
+                <% } else { %> No Image Available <% } %>
+                
+              </div>
+
+              <h3><%= service.servicename %></h3>
+              <p><%= service.description %></p>
+              <a class="btn" href="/client/singleservice/<%= service._id%>"
+                >Learn More</a
+              >
+            </div>
+          </div>
+          <% });%> <% } else { %>
+          <div class="col-12">
+            <p class="text-center">No Data Found</p>
+          </div>
+          <% };%>
+        </div>
+      </div>
+    </div>
+    <!-- Service End -->

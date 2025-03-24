@@ -1,0 +1,65 @@
+
+    <!-- Page Header Start -->
+    <div class="page-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2>Gallery</h2>
+          </div>
+          <div class="col-12">
+            <a href="">Home</a>
+            <a href="">Gallery</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Portfolio Start -->
+    <div class="portfolio">
+      <div class="container">
+        <div class="section-header text-center">
+          <p>Barber Image Gallery</p>
+          <h2>Some Images From Our Barber Gallery</h2>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <ul id="portfolio-flters">
+              <li data-filter="" class="filter-active filter-category">All</li>
+                <% data.galleries.forEach((gallery)=>{ %>
+                  <li data-cat-filter="<%= gallery.gallerydocument._id %>" class="filter-category">
+                   <%= gallery.gallerydocument.categorytype %>
+                  </li>
+              <% }) %>
+            </ul>
+          </div>
+        </div>
+        
+        <div class="row portfolio-container">
+          <% if(data.galleries && data.galleries !== undefined && data.galleries.length > 0){ %>
+          <% data.galleries.forEach((gallery)=>{ %>
+          <% gallery.img.forEach((image)=>{ %>
+          <div class="col-lg-4 col-md-6 col-sm-12 portfolio-item">
+            <div class="portfolio-wrap">
+              <a
+                href="http://localhost:3000<%=image%>"
+                data-lightbox="portfolio"
+              >
+                <img
+                  src="http://localhost:3000<%= image%>"
+                  alt="Portfolio Image"
+                />
+              </a>
+            </div>
+          </div>   
+          <% }) %>
+          <% }) %>
+          <%}else{%>
+            <div class="col-12">
+              <p class="text-center">No Data Found</p>
+            </div>
+            <%}%>
+        </div> 
+      </div>
+    </div>
+    <!-- Portfolio Start -->

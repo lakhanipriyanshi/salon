@@ -35,29 +35,20 @@ $(document).ready(function () {
 
     var formData = new FormData(this);
     var aboutId = $('#aboutId').val();
+    if(!aboutId){
+      adminToast(0,"about id not found",2000);
+    }
 
-    $.ajax({
-      url: '/admin/updateabout/' + aboutId, 
-      type: 'POST',
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (data) {
-        if (data.success) {
-          adminToast(1,data.message,2000);
-        
-          setTimeout(() => {
-            window.location.replace('/admin/about'); 
+    postFormCall(`/admin/updateabout/${aboutId}`, formData, function(res) {
+      if(res.flag === 1){
+        adminToast(1,res.msg,2000);
+        setTimeout(() => {
+          window.location.replace("/admin/about");
           }, 2000);
-          
-        } else {
-         
-          adminToast(0,data.message);
-        }
-      },
-      error: function (err) {
-        adminToast(0,'Errormessage',err);
-      },
-    });
+      }
+      else{
+        adminToast(0,res.msg,2000);
+      }
+      });
   });
 });

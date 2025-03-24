@@ -13,33 +13,20 @@ $(document).ready(function () {
       return;
     }
 
-    $.ajax({
-      url: "/admin/addservice",
-      type: "POST",
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        if (response.success) {
-          adminToast(1, response.message,2000);
-          setTimeout(() => {
-            window.location.replace("/admin/service");
-          },2000);
-        } else {
-          adminToast(0, response.message);
-        }
-      },
-      error: function (error) {
-        const errorMessage = error.responseJSON
-          ? error.responseJSON.message
-          : "Unexpected error occurred.";
-        adminToast(0, "Error message");
-      },
+   postFormCall("/admin/addservice", formData, function(res) {
+    if(res.flag === 1){
+      adminToast(1,res.msg,2000);
+      setTimeout(() => {
+        window.location.replace("/admin/service");
+        }, 2000);
+    }
+    else{
+      adminToast(0,res.msg,2000);
+    }
     });
-  });
+ });
 
   //delete
-
   $(".delete_service").on("click",function(){
     let id = $(this).data("id");
     $("#deleteservice").attr('data-service-id',id);
@@ -47,23 +34,18 @@ $(document).ready(function () {
   $(".delete-service").on("click", function (event) {
     event.preventDefault();
     var id = $(this).data("service-id");
-    $.ajax({
-      url: "/admin/deleteservice/" + id,
-      type: "POST",
-      success: function (data) {
-        if (data.success) {
-          adminToast(1, data.message,2000);
-          setTimeout(() => {
-          window.location.replace("/admin/service");
-          }, 2000);
-        } else {
-          adminToast(0, data.message);
-        }
-      },
-      error: function (error) {
-        adminToast(0, "Error");
-      },
-    });
+    
+ postCall(`/admin/deleteservice/${id}` , {}, function(res) {
+  if (res.flag === 1) {
+    adminToast(1, res.msg,2000);
+    setTimeout(() => {
+    window.location.replace("/admin/service");
+    }, 2000);
+  } else {
+    adminToast(0, res.msg,2000);
+  }
+   
+  });
   });
 
   //Update
@@ -73,25 +55,16 @@ $(document).ready(function () {
 
     var formData = new FormData(this);
     var serviceId = $("#serviceId").val();
-
-    $.ajax({
-      url: "/admin/updateservice/" + serviceId,
-      type: "POST",
-      data: formData,
-      contentType: false,
-      processData: false,
-      success: function (response) {
-        adminToast(1, response.message,2000);
-        setTimeout(()=>{
+    postFormCall(`/admin/updateservice/${serviceId}`, formData, function(res) {
+      if(res.flag === 1){
+        adminToast(1,res.msg,2000);
+        setTimeout(() => {
           window.location.replace("/admin/service");
-        },2000);
-      },
-      error: function (error) {
-        const errorMessage = error.responseJSON
-          ? error.responseJSON.message
-          : "Unexpected error occurred.";
-        adminToast(0, "Error: ");
-      },
-    });
+          }, 2000);
+      }
+      else{
+        adminToast(0,res.msg,2000);
+      }
+      });
   });
 });

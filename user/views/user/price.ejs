@@ -1,0 +1,48 @@
+
+
+    <!-- Page Header Start -->
+    <div class="page-header">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h2>Price</h2>
+          </div>
+          <div class="col-12">
+            <a href="">Home</a>
+            <a href="">Price</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Page Header End -->
+
+    <!-- Pricing Start -->
+    <div class="price">
+      <div class="container">
+        <div class="section-header text-center">
+          <p>Our Best Pricing</p>
+          <h2>We Provide Best Price in the City</h2>
+        </div>
+        <div class="row">
+          <% if (data.services && data.services.length > 0) { %> <%
+          data.services.forEach((service) => { %>
+          <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="price-item">
+              <div class="price-img">
+                <img src="/img/price-1.jpg" alt="Image" />
+              </div>
+              <div class="price-text">
+                <h2><%= service.servicename %></h2>
+                <h3><%= service.price %></h3>
+              </div>
+            </div>
+          </div>
+          <% }); %> <% } else { %>
+          <div class="col-12">
+            <p class="text-center">No data found.</p>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+    <!-- Pricing End -->

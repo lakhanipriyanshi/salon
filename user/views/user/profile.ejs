@@ -1,0 +1,132 @@
+
+    <style>
+        /* Center the form */
+       /* Center the form with extra top and bottom margin */
+#updateinfo {
+    width: 400px;
+    margin: 100px auto; /* Increased top and bottom margin */
+    padding: 20px;
+    background: #efedea; /* Beige-like color */
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Profile Image */
+.profile-image-container img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #1d2434;
+    cursor: pointer;
+}
+
+/* Form inputs */
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    font-size: 14px;
+    background: #ffffff; /* White background */
+}
+
+/* Submit Button */
+#btnpro {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    background: #1d2434;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+#btnpro:hover {
+    background: #3e3b34;
+}
+
+    </style>
+
+        <!-- Page Header Start -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>Update Profile</h2>
+                    </div>
+                    <div class="col-12">
+                        <a href="">Home</a>
+                        <a href="">Update Profile</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Page Header End -->
+
+        <form id="updateinfo" enctype="multipart/form-data">
+            <div class="profile-image-container">
+
+            <label for="image">Upload Images:</label> <br>
+            
+            <% if(data.userImage && data.userImage !== undefined){ %>
+            <img
+              src="<%= data.userImage%>"
+              alt="current profile"
+              class="profile-img"
+              width="80"
+            />
+            <% } else { %>
+            <img
+              src="/img/Profile.png"
+              alt="Profile"
+              class="profile-img"
+              width="80"
+            />
+            <% } %> 
+                <input
+                        type="file"
+                        id="profilePreview" 
+                        name="user_images"
+                        multiple
+                        />           
+            </div>       
+            <br>
+            <div class="control-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username"   minlength="3"
+                maxlength="16" name="username" value="<%= user.username %>">
+            </div>
+            <br>
+            <div class="control-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" onkeyup="validateEmail()" value="<%= user.email %>"><br />
+                <span id="email-error" style="display: none"
+                  >Enter valid email Address</span
+                >
+            </div><br>
+
+            <div class="control-group">
+                <label for="mobile">Mobile Number:</label>
+                <input type="tel" id="mobile" name="mobileno" maxlength="10" value="<%= user.mobileno %>">
+            </div><br>
+        
+            <div class="control-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender">
+                    <option value="male" <%= user.gender === 'male' ? 'selected' : '' %>>Male</option>
+                    <option value="female" <%= user.gender === 'female' ? 'selected' : '' %>>Female</option>
+                    <option value="other" <%= user.gender === 'other' ? 'selected' : '' %>>Other</option>
+                </select>
+            </div>
+        
+            <input type="hidden" id="userId" name="userId" value="<%= user._id %>">
+            
+            <button id="btnpro" type="submit">Save Changes</button>
+        </form>
+       

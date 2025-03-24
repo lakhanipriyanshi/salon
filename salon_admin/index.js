@@ -1,26 +1,19 @@
 require("dotenv").config();
 const express = require("express");
 const expressLayouts = require("express-ejs-layouts");
-var cors = require("cors");
-const errorHandler = require("./utils/errorHandler");
-const adminRouters = require("./routes/adminRouters");
-const { log1 } = require("./lib/general.lib");
+const { log1 } = require("./utils/general.lib");
 const router = require("./routes/adminRouters");
 const app = express();
 const path = require('path');
-
-//const fileUpload = require("express-fileupload");
-const httpServer = require("http").createServer(app);
-
+var cors = require("cors");
 var session = require("express-session");
 
-//app.use(fileUpload({ createParentPath: true,}));
+const httpServer = require("http").createServer(app);
 
 //Third-party middleware 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//app.use('/uploads', express.static('uploads'));
 
 // Serve static files from the 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -33,15 +26,13 @@ app.use("/css", express.static("assets/css"));
 app.use("/js", express.static("assets/js"));
 app.use("/images", express.static("assets/images"));
 app.use("/vendor", express.static("assets/vendor"));
-app.use("/banner_images", express.static("uploads/banner_images"));
-app.use("/service_images", express.static("uploads/service_images"));
-app.use("/user_images", express.static("uploads/user_images"));
 app.use(expressLayouts);
 
 // Set up the view engine (EJS)
 app.set("view engine", "ejs");
 app.set("layout", "./layouts/admin-layout");
 
+//use Session
 app.use(
   session({
      secret: process.env.SESSION_SECRET,

@@ -1,4 +1,4 @@
-const { log1 } = require("../lib/general.lib");
+const { log1 } = require("../utils/general.lib");
 const { getAdmin } = require("../service/admin");
 const { getSettings } = require("../models/settings.model");
 const { generateAuthToken } = require("../service/adminToken");
@@ -15,7 +15,7 @@ module.exports = async (req, res, next) => {
       return;
    };
    let loginAdmin = await getAdmin(req.session.admin._id);
-   let ua = req.get("User-Agent");
+   let ua = req.get("User-Agent");     
    if (loginAdmin.flag !== 0) {
       let already_login = await generateAuthToken(loginAdmin.data._id);
       if (already_login.flag !== 1) {
