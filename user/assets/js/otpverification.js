@@ -9,12 +9,13 @@ $(document).ready(function () {
       }
       postCall("/client/otpverfication" ,{email,otp}, function(res) {
         if (res.flag === 1) {
-          userToast(1, res.msg,2000);
+          userToast(res.flag, res.msg);
           setTimeout(() => {
           window.location.replace("/client/login");
           }, 2000);
-        } else {
-          userToast(2, res.msg,2000);
+        }
+        else{
+          userToast(res.flag, res.msg);
         }
       });
     });

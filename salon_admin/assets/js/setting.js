@@ -23,12 +23,12 @@ $(document).ready(function () {
     }
     postCall(`/admin/setting/${adminId}` , {old_password,new_password,confirm_password}, function(res) {
       if (res.flag === 1) {
-        adminToast(1, res.msg,2000);
+        adminToast(res.flag,res.msg);
         setTimeout(() => {
         window.location.replace("/admin/login");
         }, 2000);
       } else {
-        adminToast(0, res.msg,2000);
+        adminToast(res.flag,res.msg);
       }
        
       });

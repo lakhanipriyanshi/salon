@@ -20,13 +20,11 @@ $(document).ready(function () {
       return;
     }
     postCall("/admin/addcategory" , {categorytype,status}, function(res) {
-      if (res.flag === 1) {
-        adminToast(1, res.msg,2000);
+      adminToast(res.flag, res.msg);
+      if (res.flag) {
         setTimeout(() => {
         window.location.replace("/admin/category");
         }, 2000);
-      } else {
-        adminToast(0, res.msg,2000);
       }
     });
   
@@ -40,13 +38,11 @@ $(document).ready(function () {
     const status = $(this).val();
 
     postCall("/admin/updatestatus" , {categoryId,status}, function(res) {
-      if (res.flag === 1) {
-        adminToast(1, res.msg,2000);
+      adminToast(res.flag, res.msg);
+      if (res.flag) {
         setTimeout(() => {
         window.location.replace("/admin/category");
         }, 2000);
-      } else {
-        adminToast(0, res.msg,2000);
       }
     });
   });
@@ -61,12 +57,12 @@ $(document).ready(function () {
     
  postCall(`/admin/deletecategory/${id}` , {}, function(res) {
   if (res.flag === 1) {
-    adminToast(1, res.msg,2000);
+    adminToast(res.flag, res.msg);
     setTimeout(() => {
     window.location.replace("/admin/category");
     }, 2000);
   } else {
-    adminToast(0, res.msg,2000);
+    adminToast(res.flag, res.msg);
   }
    
   });

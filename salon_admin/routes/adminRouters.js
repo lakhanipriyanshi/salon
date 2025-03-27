@@ -23,6 +23,7 @@ const {
   getlogout,
   getadduser, 
   getupdateuserstatus,
+
   postLogin,
   postupdateabout,
   postaddservice,
@@ -41,6 +42,7 @@ const {
   postadduser,
   postupdateuserstatus,
   postbookappoinmentupdatestatus,
+  // postaddabout,
 } = require("../controllers/admin.controller");
 
 const { generateAuthToken } = require("../service/adminToken");
@@ -91,5 +93,7 @@ router.post("/updatestatus", adminAuth, postupdatestatus);
 router.post("/addgallery", adminAuth, postaddgallery);
 router.post("/setting/:id", adminAuth, postsetting);
 router.post("/updatebookstatus/:id",adminAuth,postbookappoinmentupdatestatus);
+
+// router.post("/about", adminAuth, postaddabout);
 
 module.exports = router;

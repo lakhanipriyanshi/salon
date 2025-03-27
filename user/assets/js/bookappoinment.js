@@ -42,12 +42,13 @@ $(document).ready(function(){
       
         postCall("/client/book-appoinment" ,{servicename,barbername,bookdate}, function(res) {
           if (res.flag === 1) {
-            userToast(1, res.msg,2000);
+            userToast(res.flag,res.msg);
             setTimeout(() => {
             window.location.replace("/client/home");
             }, 2000);
-          } else {
-            userToast(0, res.msg,2000);
+          } 
+          else{
+            userToast(res.flag,res.msg);
           }
         });
       });

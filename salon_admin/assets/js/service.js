@@ -14,14 +14,14 @@ $(document).ready(function () {
     }
 
    postFormCall("/admin/addservice", formData, function(res) {
-    if(res.flag === 1){
-      adminToast(1,res.msg,2000);
+    if(res.flag === 1){ 
+      adminToast(res.flag,res.msg);
       setTimeout(() => {
         window.location.replace("/admin/service");
         }, 2000);
     }
     else{
-      adminToast(0,res.msg,2000);
+      adminToast(res.flag,res.msg);
     }
     });
  });
@@ -37,12 +37,12 @@ $(document).ready(function () {
     
  postCall(`/admin/deleteservice/${id}` , {}, function(res) {
   if (res.flag === 1) {
-    adminToast(1, res.msg,2000);
+    adminToast(res.flag,res.msg);
     setTimeout(() => {
     window.location.replace("/admin/service");
     }, 2000);
   } else {
-    adminToast(0, res.msg,2000);
+    adminToast(res.flag,res.msg);
   }
    
   });
@@ -57,13 +57,13 @@ $(document).ready(function () {
     var serviceId = $("#serviceId").val();
     postFormCall(`/admin/updateservice/${serviceId}`, formData, function(res) {
       if(res.flag === 1){
-        adminToast(1,res.msg,2000);
+        adminToast(res.flag,res.msg);
         setTimeout(() => {
           window.location.replace("/admin/service");
           }, 2000);
       }
       else{
-        adminToast(0,res.msg,2000);
+        adminToast(res.flag,res.msg);
       }
       });
   });

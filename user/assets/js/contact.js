@@ -33,14 +33,15 @@ $(document).ready(function () {
   
       postCall("/client/contact/save" , { name,email,subject,message}, function(res) {
         if (res.flag === 1) {
-          userToast(1, res.msg,2000);
+          userToast(res.flag, res.msg);
           $("#contactForm")[0].reset();
         } else {
-          userToast(0, res.msg,2000);
+          userToast(res.flag, res.msg);
         }
       });
     });
-       
+
+          
   });
   
   

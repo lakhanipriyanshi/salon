@@ -16,10 +16,10 @@ $("#submitButton").on("click", function (e) {
     }
     postCall("/client/sendmail" , { email}, function(res) {
       if (res.flag === 1) {
-        userToast(1, res.msg,2000);
+        userToast(res.flag, res.msg);
         $("#emailInput").val("");
       } else {
-        userToast(0, res.msg,2000);
+        userToast(res.flag, res.msg);
       }
     });
   });

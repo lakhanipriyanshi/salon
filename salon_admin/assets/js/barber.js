@@ -15,13 +15,13 @@ $(document).ready(function () {
 
     postFormCall("/admin/addbarber", formData, function(res) {
       if(res.flag === 1){
-        adminToast(1,res.msg,2000);
+        adminToast(res.flag,res.msg);
         setTimeout(() => {
           window.location.replace("/admin/barber");
           }, 2000);
       }
       else{
-        adminToast(0,res.msg,2000);
+        adminToast(res.flag,res.msg);
       }
     });
   });
@@ -38,12 +38,12 @@ $(document).ready(function () {
 
     postCall(`/admin/deletebarber/${id}` , {}, function(res) {
       if (res.flag === 1) {
-        adminToast(1, res.msg,2000);
+        adminToast(res.flag,res.msg);
         setTimeout(() => {
         window.location.replace("/admin/barber");
         }, 2000);
       } else {
-        adminToast(0, res.msg,2000);
+        adminToast(res.flag,res.msg);
       }
     });
   });
@@ -58,13 +58,13 @@ $(document).ready(function () {
 
     postFormCall(`/admin/updatebarber/${barberId}`, formData, function(res) {
       if(res.flag === 1){
-        adminToast(1,res.msg,2000);
+        adminToast(res.flag,res.msg);
         setTimeout(() => {
           window.location.replace("/admin/barber");
           }, 2000);
       }
       else{
-        adminToast(0,res.msg,2000);
+        adminToast(res.flag,res.msg);
       }
     });
   });

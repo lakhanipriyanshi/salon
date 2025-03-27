@@ -14,13 +14,13 @@ $(document).ready(function () {
       }
   
       postCall(`/client/gallery/${categoryId}`,object, function(res) {
-        if(res.html){
-            $(".portfolio-container").html(res.html || "");
-          userToast(1,res.msg ||"image load success",2000);
+        if(res.flag === 1){
+            $(".portfolio-container").html(res.data.gallery_html || "");
+          //userToast(1,res.msg ||"image load success",2000);
         }
         else{
-          userToast(0,res.msg,2000);
+          userToast(res.flag,res.msg,2000);
         }
       });
-    });
+    }); 
   });

@@ -428,7 +428,7 @@ const getprofile = async (req, res) => {
     layout: "./layouts/user-layout",
       header: {
         notification: notificationDetails,
-        pagename:"price",
+        pagename:"Home",
         userImage,
       },
       footer: {
@@ -459,7 +459,7 @@ const getbookappoinment = async (req, res) => {
     layout: "./layouts/user-layout",
       header: {
         notification: notificationDetails,
-        pagename:"price",
+        pagename:"Home",
         userImage,
       },
       data: { 
@@ -612,7 +612,8 @@ const postgallery = async (req, res) => {
       data: { galleries },
     });
 
-    return res.json({ html });
+    return res.json(success_res("fetch gallery", { gallery_html: html }));
+    // return res.json({ html });
   } catch (error) {
     console.error("postgallery---------->",error)
     return res.json(error_res("Error fetch gallery" ));
@@ -844,7 +845,7 @@ const postcontact = async (req, res) => {
   log1("postcontact");
   try {
     let body = req.body;
-    const validate = custom_validation(body, "user.bookappoinment");
+    const validate = custom_validation(body, "user.contact");
     if (validate.flag != 1) {
       return res.json(validate);
     }

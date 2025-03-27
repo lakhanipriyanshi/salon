@@ -62,13 +62,13 @@ $(document).ready(function () {
      
      postCall("/client/register" ,{username,password,email,mobileno,gender}, function(res) {
        if (res.flag === 1) {
-         userToast(1, res.msg,2000);
+         userToast(res.flag, res.msg);
          setTimeout(() => {
          window.location.replace("/client/otpverfication");
          submitbutton.disabled = false;
          }, 2000);
-       } else {
-         userToast(0, res.msg,2000);
+       } else{
+        userToast(res.flag, res.msg);
        }
        submitbutton.disabled = false;
      });

@@ -9,13 +9,13 @@ $(document).ready(function () {
     
     postFormCall(`/admin/updateuser/${userId}`, formData, function(res) {
       if(res.flag === 1){
-        adminToast(1,res.msg,2000);
+        adminToast(res.flag,res.msg);
         setTimeout(() => {
           window.location.replace("/admin/user");
           }, 2000);
       }
       else{
-        adminToast(0,res.msg,2000);
+         adminToast(res.flag,res.msg);
       }
       });
   });
@@ -30,12 +30,12 @@ $(document).ready(function () {
 
     postCall(`/admin/updateuserstatus/${userId}` , {status}, function(res) {
       if (res.flag === 1) {
-        adminToast(1, res.msg,2000);
+        adminToast(res.flag,res.msg);
         setTimeout(() => {
         window.location.replace("/admin/user");
         }, 2000);
       } else {
-        adminToast(0, res.msg,2000);
+        adminToast(res.flag,res.msg);
       }
     });
   });
@@ -88,13 +88,13 @@ $(document).ready(function () {
 
     postFormCall("/admin/adduser", formData, function(res) {
       if(res.flag === 1){
-        adminToast(1,res.msg,2000);
+        adminToast(res.flag,res.msg);
         setTimeout(() => {
           window.location.replace("/admin/user");
           }, 2000);
       }
       else{
-        adminToast(0,res.msg,2000);
+        adminToast(res.flag,res.msg);
       }
       });
   });
@@ -113,12 +113,12 @@ $(document).ready(function () {
 
     postCall(`/admin/deleteuser/${id}` , {}, function(res) {
       if (res.flag === 1) {
-        adminToast(1, res.msg,2000);
+        adminToast(res.flag,res.msg);
         setTimeout(() => {
         window.location.replace("/admin/user");
         }, 2000);
       } else {
-        adminToast(0, res.msg,2000);
+        adminToast(res.flag,res.msg);
       }
     });
     

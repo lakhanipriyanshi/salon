@@ -20,12 +20,12 @@ $(document).ready(function(){
 
         postCall(`/admin/updatebookstatus/${booksid}` , {status,userId}, function(res) {
           if (res.flag === 1) {
-            adminToast(1, res.msg,2000);
+            adminToast(res.flag, res.msg);
             setTimeout(() => {
             window.location.replace("/admin/book-appoinment");
             }, 2000);
           } else {
-            adminToast(0, res.msg,2000);
+            adminToast(res.flag, res.msg);
           }
            
           });

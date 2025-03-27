@@ -566,7 +566,7 @@ const getabout = async (req, res) => {
     });
   } catch (error) {
     console.error("getAbout--------->",error);
-    return res.json(error_res("error fetching service"));
+    return res.json(error_res("error fetching about"));
   }
 };
 
@@ -632,6 +632,7 @@ const getaddbarber = async (req, res) => {
     console.error("getaddbarber------->",error);
   }
 };
+
 
 const getcategory = async (req, res) => {
   log1("getcategory");
@@ -1074,31 +1075,32 @@ const postaddcategory = async (req, res) => {
   }
 };
 
-const postaddabout = (req, res) => {
-  log1("postaddabout");
-  upload(req, res, async function (err) {
-    if (err) {
-      return res.json(error_res(err.message));
-    }
-    try {
-    let imageArray = [];
-    if (req.files.service_images) {
-      req.files.service_images.map((file) => {
-        imageArray.push(`/uploads/service_images/${file.filename}`);
-      });
-    }   
-      const newabout = await about.create({
-        experince: req.body.experince,
-        description: req.body.description,
-        img: imageArray,
-      });
-      return res.json(success_res("about added successfully!", newabout));
-    } catch (error) {
-      console.error("postaddabout----------------->", error);
-      return res.json(error_res("Failed to add about"));
-    }
-  });
-};
+// const postaddabout = (req, res) => {
+//   log1("postaddabout");
+//   upload(req, res, async function (err) {
+//     if (err) {
+//       return res.json(error_res(err.message));
+//     }
+//     try {
+//     let imageArray = [];
+//     if (req.files.service_images) {
+//       req.files.service_images.map((file) => {
+//         imageArray.push(`/uploads/service_images/${file.filename}`);
+//       });
+//     }   
+//       const newabout = await about.create({
+//         experince: req.body.experince,
+//         description: req.body.description,
+//         img: imageArray,
+//       });
+//       return res.json(success_res("about added successfully!", newabout));
+//     } catch (error) {
+//       console.error("postaddabout----------------->", error);
+//       return res.json(error_res("Failed to add about"));
+//     }
+//   });
+// };
+
 
 const postupdatestatus = async (req, res) => {
   log1("postupdatestatus");
@@ -1285,7 +1287,7 @@ const postupdateabout = (req, res) => {
         {
           $set: updateObj,
         },
-        { new: true }
+        { upsert: true }
       );
 
       return res.json(success_res("about updated successfully", aboutupdate));
@@ -1577,7 +1579,6 @@ module.exports = {
   postdeletebarber,
   postupdateservice,
   postupdatebarber,
-  postaddabout,
   postupdateabout,
   postaddcategory,
   postupdatestatus,
@@ -1589,4 +1590,5 @@ module.exports = {
   postadduser,
   postupdateuserstatus,
   postbookappoinmentupdatestatus,
+  // postaddabout,
 };
