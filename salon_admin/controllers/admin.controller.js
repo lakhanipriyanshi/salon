@@ -69,6 +69,8 @@ const upload = multer({
   { name: "category_images" },
 ]);
 
+
+
 // GET
 const getLogin = async (req, res) => {
   log1("getLogin");
@@ -1431,6 +1433,7 @@ const postbookappoinmentupdatestatus = async (req, res) => {
       notificationType: Constants?.NOTIFICATION_TYPE?.BOOk,
       is_user: true,
     });
+    
     return res.json(success_res("status updated successfully", bookstatus));
   } catch (error) {
     console.error("postbookappoinmentupdatestatus---------->",error);

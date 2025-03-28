@@ -15,8 +15,10 @@ module.exports = {
       INACTIVE:1,
       ACTIVE:2,
    },
+
    NOTIFICATION_TYPE:{
       BOOk:1,
+      SALONNOTIFICATION:2,
    }
 
 };

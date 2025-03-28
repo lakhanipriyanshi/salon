@@ -62,8 +62,7 @@
                   data-bs-target="#exampleModal1"
                   data-userid="<%=book.userId%>"
                   data-booksid="<%= book._id%>"
-                  class="btn btn-success btn-sm booking_status_change"
-                >
+                  class="btn btn-success btn-sm booking_status_change">
                   Accept
                 </button>
                 <!-- Button trigger modal -->
@@ -72,8 +71,7 @@
                   data-bs-target="#exampleModal"
                   data-userid="<%=book.userId%>"
                   data-booksid="<%= book._id%>"
-                  class="btn btn-danger btn-sm booking_status_change"
-                >
+                  class="btn btn-danger btn-sm booking_status_change">
                   Reject
                 </button>
                 <% } else if(book.status === 2){ %>

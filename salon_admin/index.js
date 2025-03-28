@@ -7,6 +7,7 @@ const app = express();
 const path = require('path');
 var cors = require("cors");
 var session = require("express-session");
+var cronfile = require("../salon_admin/cron/index")
 
 const httpServer = require("http").createServer(app);
 
@@ -42,6 +43,9 @@ app.use(
 );
 
 app.use("/admin", router);
+
+//cronnotification
+cronfile()
 
 httpServer.listen(process.env.PORT, () => {
   log1(`app listening at ${process.env.APP_URL}`);
